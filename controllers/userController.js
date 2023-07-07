@@ -23,11 +23,11 @@ const UserReg = async (req, res) => {
             })
             let user = await newUser.save().then(console.log("updated"))
             const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1m' });
-            const emailtoken = await new Token({
+            const emailtoken = await new Tokenmodel({
                 userId: user._id,
                 token:crypto.randomBytes(32).toString("hex")
             }).save()
-            const url = `${process.env.BASE_URL}users/${user._id}/verify/${emailtoken.token}`
+            const url = `${process.env.BASE_URL}/${user._id}/verify/${emailtoken.token}`
             await sendEmail(user.email,"Verify Email",url)
             return res.status(201).json({ created: true, message: "An Email Sent to your account please verify", token: token });
         }
@@ -38,14 +38,16 @@ const UserReg = async (req, res) => {
 
 const verification = async (req, res) => {
     try {
+        console.log("hiiiiiiiiiiiiiiiiiii");
         const user = await userModel.findOne({_id:req.params.id})
         if (!user) {
             return res.status(400).json({message:"Invalid Link"})
         }
         const token = await Tokenmodel.findOne({
             userId: user._id,
-            token:req.params
+            token:req.params.token
         })
+        console.log(token,"tokennnnnnnnnnnnnnnnnn");
         if (!token) {
             return res.status(400).json({message:"Invalid Link"})
         }
@@ -132,5 +134,6 @@ module.exports= {
     UserReg,
     UserLogin,
     UserGoogleReg,
-    UserGoogleLogin
+    UserGoogleLogin,
+    verification
 }
