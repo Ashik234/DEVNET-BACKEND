@@ -1,11 +1,25 @@
-const express=require("express")
-const { UserReg, UserLogin,UserGoogleReg, UserGoogleLogin, verification } = require("../controllers/userController")
-const router = express.Router()
+const express = require("express");
+const {
+  UserReg,
+  UserLogin,
+  UserGoogleReg,
+  UserGoogleLogin,
+  verification,
+  isUserAuth,
+} = require("../controllers/userController");
+const {askQuestion,getQuestions} = require("../controllers/questionController")
 
-router.post('/register', UserReg)
-router.post('/googleRegister',UserGoogleReg)
-router.post('/login', UserLogin)
-router.post('/googleLogin', UserGoogleLogin)
-router.get("/:id/verify/:token",verification)
+const { userAuthentication } = require("../Middlewares/userAuth");
+const router = express.Router();
 
-module.exports = router 
+
+router.post("/register", UserReg);
+router.post("/googleRegister", UserGoogleReg);
+router.post("/login", UserLogin);
+router.post("/googleLogin", UserGoogleLogin);
+router.get("/:id/verify/:token", verification);
+router.get("/userAuth",userAuthentication,isUserAuth)
+router.get("/questions",getQuestions)
+router.post("/ask",userAuthentication,askQuestion)
+
+module.exports = router;
