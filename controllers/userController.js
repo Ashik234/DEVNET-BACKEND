@@ -7,12 +7,12 @@ const crypto = require("crypto");
 
 const UserReg = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password,joinedDate } = req.body;
     const exists = await userModel.findOne({ email: email });
     if (exists) {
       return res
         .status(200)
-        .json({ exists: true, message: "email already exists" });
+        .json({ exists: true, message: "Email already exists" });
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedpassword = await bcrypt.hash(password, salt);
@@ -21,8 +21,9 @@ const UserReg = async (req, res) => {
         username,
         email,
         password: hashedpassword,
+        joinedDate
       });
-      let user = await newUser.save().then(console.log("updated"));
+      let user = await newUser.save().then(console.log("Updated"));
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
         expiresIn: 6000000,
       });
@@ -47,7 +48,6 @@ const UserReg = async (req, res) => {
 
 const verification = async (req, res) => {
   try {
-    console.log("hiiiiiiiiiiiiiiiiiii");
     const user = await userModel.findOne({ _id: req.params.id });
     if (!user) {
       return res.status(400).json({ message: "Invalid Link" });
@@ -56,13 +56,12 @@ const verification = async (req, res) => {
       userId: user._id,
       token: req.params.token,
     });
-    console.log(token, "tokennnnnnnnnnnnnnnnnn");
     if (!token) {
       return res.status(400).json({ message: "Invalid Link" });
     }
     await userModel.updateOne({ _id: user._id }, { $set: { verified: true } });
     await Tokenmodel.deleteOne({ _id: token._id });
-    res.status(200).json({user:user, message: "Email Verification Successful " });
+    res.status(200).json({user:user, message: "Email Verification Successful"});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "internal server error" });
@@ -84,7 +83,7 @@ const UserLogin = async (req, res) => {
           .json({
             user: exists,
             token: token,
-            message: "login Successfull",
+            message: "Login Successfull",
             status: true,
           });
       } else if (!exists.verified) {
@@ -92,18 +91,18 @@ const UserLogin = async (req, res) => {
           .status(401)
           .json({
             message:
-              "please verify the mail by clicking the link sent to your mail",
+              "Please Verify The Mail By Clicking The Link Sent To Your Mail",
             status: false,
           });
       } else {
         return res
           .status(404)
-          .json({ alert: "Email or Password is wrong", status: false });
+          .json({ message: "Email or Password is wrong", status: false });
       }
     } else {
       return res
         .status(201)
-        .json({ alert: "This email is not registered", status: false });
+        .json({ message: "This Email is Not Registered", status: false });
     }
   } catch (error) {
     console.log(error);
@@ -117,7 +116,7 @@ const UserGoogleReg = async (req, res) => {
     if (exists) {
       return res
         .status(200)
-        .json({ exists: true, message: "email already exists" });
+        .json({ exists: true, message: "Email Already Exists" });
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedpassword = await bcrypt.hash(id, salt);

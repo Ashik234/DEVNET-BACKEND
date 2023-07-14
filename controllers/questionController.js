@@ -12,7 +12,7 @@ const askQuestion = async (req, res) => {
         let question = await newQuestion.save().then(console.log("Question Created"))
         .catch((err)=>console.log(err))
         if(question){
-            res.status(200).json({success:true,message:"Created Successfully"})
+            res.status(200).json({success:true,message:"Question Created Successfully"})
         }
     } catch (error) {
         console.log(error);
@@ -34,8 +34,38 @@ const getQuestions = async(req,res)=>{
     }
 }
 
+const getSingleQuestion = async(req,res)=>{
+    try {
+        console.log("singlequestion");
+
+        const id = req.params.id
+        console.log(id,"PARAMD ID");
+        let singlequestion = await questionModel.findOne({_id:id}).populate("userId")
+        console.log(singlequestion);
+        if(singlequestion){
+            console.log("kkkkkkkkk");
+            res.status(200).json({data:true,message:"Single Question",singlequestion})
+        }else{
+            res.status(200).json({data:false, message: "No Data Found",})    
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: true, message: error.message });
+    }
+}
+
+const answerQuestion = async(req,res)=>{
+    try {
+        console.log("answerquestion");
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 module.exports = {
     askQuestion,
-    getQuestions
+    getQuestions,
+    getSingleQuestion,
+    answerQuestion
 }

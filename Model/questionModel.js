@@ -18,6 +18,23 @@ const questionSchema = new mongoose.Schema({
         type:Array,
         required:true
     },
+    answers: {
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "users",
+        },
+        date: {
+          type: Date,
+          default: Date.now,
+        },
+        answer: {
+          type: String,
+        },
+        verified: {
+          type: Boolean,
+          default: false,
+        },
+      },
 })
 
 const questionModel = mongoose.model("questions",questionSchema)

@@ -21,6 +21,14 @@ const userSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  joinedDate: {
+    type: String,
+    set: function() {
+      const date = new Date();
+      const options = { day: "numeric", month: "long", year: "numeric" };
+      return date.toLocaleDateString("en-US", options);
+    },
+  },
 });
 
 const userModel = mongoose.model("users", userSchema);
