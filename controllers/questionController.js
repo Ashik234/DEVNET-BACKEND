@@ -2,14 +2,16 @@ const questionModel = require("../Model/questionModel");
 
 const askQuestion = async (req, res) => {
     try {
-        const {user,title,description,tags} = req.body
+        console.log(req.body);
+        const {user,title,description,tags,createdAt} = req.body
         const newQuestion = new questionModel({
             userId:user,
             title,
             description,
             tags,
+            createdAt
         })
-        let question = await newQuestion.save().then(console.log("Question Created"))
+        let question = await newQuestion.save()
         .catch((err)=>console.log(err))
         if(question){
             res.status(200).json({success:true,message:"Question Created Successfully"})
@@ -36,14 +38,10 @@ const getQuestions = async(req,res)=>{
 
 const getSingleQuestion = async(req,res)=>{
     try {
-        console.log("singlequestion");
-
         const id = req.params.id
-        console.log(id,"PARAMD ID");
-        let singlequestion = await questionModel.findOne({_id:id}).populate("userId")
-        console.log(singlequestion);
+        let singlequestion = await questionModel.findOne({_id:id}).populate("userId").populate("answers.userId")
         if(singlequestion){
-            console.log("kkkkkkkkk");
+            console.log(singlequestion);
             res.status(200).json({data:true,message:"Single Question",singlequestion})
         }else{
             res.status(200).json({data:false, message: "No Data Found",})    
@@ -54,18 +52,42 @@ const getSingleQuestion = async(req,res)=>{
     }
 }
 
-const answerQuestion = async(req,res)=>{
+const answerQuestion = async (req, res) => {
     try {
-        console.log("answerquestion");
-    } catch (error) {
-        console.log(error);
-    }
-}
+      const id = req.params.id;
+      const { answer } = req.body;
+  const userId = req.userId
+  console.log(userId);
+      const existingQuestion = await questionModel.findOne({
+        _id: id,
+        'answers.answer': answer,
+      });
+  
+      if (existingQuestion) {
+        return res
+          .status(400)
+          .json({ success: false, message: "You've already answered this question" });
+      }
 
+      const updatedQuestion = await questionModel.updateOne(
+        { _id: id },
+        { $push: { answers: { answer: answer,userId:userId } } }
+      );
+  
+      if (updatedQuestion) {
+        return res
+          .status(200)
+          .json({ success: true, message: 'Answer Submitted Successfully' });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };  
 
 module.exports = {
     askQuestion,
     getQuestions,
     getSingleQuestion,
-    answerQuestion
+    answerQuestion,
 }
