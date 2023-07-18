@@ -59,9 +59,13 @@ const verification = async (req, res) => {
     if (!token) {
       return res.status(400).json({ message: "Invalid Link" });
     }
+    const token1 = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: 6000000,
+    });
+    console.log(token1);
     await userModel.updateOne({ _id: user._id }, { $set: { verified: true } });
     await Tokenmodel.deleteOne({ _id: token._id });
-    res.status(200).json({user:user, message: "Email Verification Successful"});
+    res.status(200).json({user:user,token1, message: "Email Verification Successful"});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "internal server error" });

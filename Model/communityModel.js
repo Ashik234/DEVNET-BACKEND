@@ -7,7 +7,7 @@ const communitySchema = mongoose.Schema({
     },
     image:{
         type: String,
-        required:true
+        // required:true
     },
     type:{
        type: String,
@@ -24,7 +24,16 @@ const communitySchema = mongoose.Schema({
           const options = { day: "numeric", month: "long", year: "numeric" };
           return date.toLocaleDateString("en-US", options);
         },
-    },     
+    }, 
+    members:[{
+        member:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+        },
+        role:{
+            type:String
+        }
+    }]    
 })
 
 const communityModel = mongoose.model("community",communitySchema)
