@@ -16,7 +16,7 @@ const createCommunity = async (req, res) => {
       members: [
         {
           member: userId,
-          role: "admin",
+          role: "Admin",
         },
       ],
     });
@@ -49,7 +49,7 @@ const getCommunity = async (req, res) => {
 const getSingleCommunity = async (req, res) => {
   try {
     const id = req.params.id;
-    let singlecommunity = await communityModel.findOne({ _id: id });
+    let singlecommunity = await communityModel.findOne({ _id: id }).populate("members.member")
     if (singlecommunity) {
       const numberOfMembers = singlecommunity.members.length;
       singlecommunity = {
@@ -73,12 +73,16 @@ const joinCommunity = async (req, res) => {
     const userId = req.userId;
     const updatedCommunity = await communityModel.updateOne(
       { _id: id },
-      { $push: { members: { member: userId ,role:"member"} } }
+      { $push: { members: { member: userId, role: "Member" } } }
     );
     if (updatedCommunity) {
       return res
         .status(200)
-        .json({ success: true, message: "Joined The Community Successfully",updatedCommunity });
+        .json({
+          success: true,
+          message: "Joined The Community Successfully",
+          updatedCommunity,
+        });
     }
   } catch (error) {
     console.log(error);

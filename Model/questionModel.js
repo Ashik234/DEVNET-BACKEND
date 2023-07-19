@@ -18,7 +18,7 @@ const questionSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
-  createdAt:{
+  createdAt: {
     type: String,
     set: function () {
       const date = new Date();
@@ -26,27 +26,29 @@ const questionSchema = new mongoose.Schema({
       return date.toLocaleDateString("en-US", options);
     },
   },
-  answers: [{
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-    },
-    submitedAt: {
-      type: String,
-      set: function () {
-        const date = new Date();
-        const options = { day: "numeric", month: "long", year: "numeric" };
-        return date.toLocaleDateString("en-US", options);
+  answers: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+      submitedAt: {
+        type: String,
+        set: function () {
+          const date = new Date();
+          const options = { day: "numeric", month: "long", year: "numeric" };
+          return date.toLocaleDateString("en-US", options);
+        },
+      },
+      answer: {
+        type: String,
+      },
+      verified: {
+        type: Boolean,
+        default: false,
       },
     },
-    answer: {
-      type: String,
-    },
-    verified: {
-      type: Boolean,
-      default: false,
-    },
-  }],
+  ],
 });
 
 const questionModel = mongoose.model("questions", questionSchema);

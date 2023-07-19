@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema({
       return date.toLocaleDateString("en-US", options);
     },
   },
+  saved:[{
+    questionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "questions",
+    },
+  }]
 });
 
 const userModel = mongoose.model("users", userSchema);
