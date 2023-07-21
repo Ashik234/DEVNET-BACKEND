@@ -24,7 +24,7 @@ const createCommunity = async (req, res) => {
     if (community) {
       res
         .status(200)
-        .json({ success: true, message: "Commnity Created Successfully" });
+        .json({ success: true, message: "Community Created Successfully" });
     }
   } catch (error) {
     console.log(error);

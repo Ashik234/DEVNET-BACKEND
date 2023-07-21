@@ -19,6 +19,20 @@ const adminLogin = async (req, res) => {
     }
 }
 
+const isAdminAuth = async(req,res)=>{
+    try {
+        const adminData = await adminModel.findOne({_id:req.adminId})
+        if(!adminData){
+            return res.status(404).json({message:"Authentication Failed",success:false})
+        }else{
+            return res.status(200).json({success:true,adminData:adminData})
+        }
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
-    adminLogin
+    adminLogin,
+    isAdminAuth
 }

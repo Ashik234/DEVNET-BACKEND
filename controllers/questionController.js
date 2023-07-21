@@ -1,5 +1,5 @@
 const questionModel = require("../Model/questionModel");
-const userModel = require("../Model/userModel")
+const userModel = require("../Model/userModel");
 
 const askQuestion = async (req, res) => {
   try {
@@ -37,34 +37,34 @@ const getQuestions = async (req, res) => {
   }
 };
 
-const saveQuestion = async(req,res)=>{
+const saveQuestion = async (req, res) => {
   try {
     const id = req.params.id;
     const userId = req.userId;
 
     updatedProfile = await userModel.updateOne(
-      {_id:userId},
-      {$push:{saved:{questionId:id}}}
-    )
-    if(updatedProfile){
+      { _id: userId },
+      { $push: { saved: { questionId: id } } }
+    );
+    if (updatedProfile) {
       return res
-      .status(200)
-      .json({ success: true, message: "Question Saved Successfully" });
-    }   
+        .status(200)
+        .json({ success: true, message: "Question Saved Successfully" });
+    }
   } catch (error) {
     console.log(error);
   }
-}
+};
 
-const getSavedQuestions = async(req,res)=>{
+const getSavedQuestions = async (req, res) => {
   try {
     const userId = req.userId;
-    console.log(userId);
 
-    const savedQuestions = await userModel.findOne({_id:userId}).populate("saved.questionId")
-    console.log(savedQuestions);
-if(savedQuestions){
-  res
+    const savedQuestions = await userModel
+      .findOne({ _id: userId })
+      .populate("saved.questionId");
+    if (savedQuestions) {
+      res
         .status(200)
         .json({ data: true, message: "SavedQuestions ", savedQuestions });
     } else {
@@ -73,8 +73,7 @@ if(savedQuestions){
   } catch (error) {
     console.log(error);
   }
-
-}
+};
 
 const getSingleQuestion = async (req, res) => {
   try {
@@ -107,12 +106,10 @@ const answerQuestion = async (req, res) => {
     });
 
     if (existingQuestion) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "You've already answered this question",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "You've already answered this question",
+      });
     }
 
     const updatedQuestion = await questionModel.updateOne(

@@ -22,22 +22,23 @@ const {
   joinCommunity,
 } = require("../controllers/communityController");
 
+const { createEvent, getEvents } = require("../controllers/eventController");
 const { userAuthentication } = require("../Middlewares/userAuth");
 const upload = require("../Middlewares/multer");
 const router = express.Router();
 
-router.post("/register", UserReg);
-router.post("/googleRegister", UserGoogleReg);
-router.post("/login", UserLogin);
-router.post("/googleLogin", UserGoogleLogin);
-router.get("/:id/verify/:token", verification);
-router.get("/userAuth", userAuthentication, isUserAuth);
-router.get("/questions", getQuestions);
+router.post("/register",UserReg);
+router.post("/googleRegister",UserGoogleReg);
+router.post("/login",UserLogin);
+router.post("/googleLogin",UserGoogleLogin);
+router.get("/:id/verify/:token",verification);
+router.get("/userAuth",userAuthentication,isUserAuth);
+router.get("/questions",userAuthentication,getQuestions);
 router.post("/save/:id",userAuthentication,saveQuestion)
 router.get("/savedquestions/:id",userAuthentication,getSavedQuestions)
-router.get("/viewquestion/:id", userAuthentication, getSingleQuestion);
-router.post("/ask", userAuthentication, askQuestion);
-router.post("/answer/:id", userAuthentication, answerQuestion);
+router.get("/viewquestion/:id",userAuthentication, getSingleQuestion);
+router.post("/ask",userAuthentication, askQuestion);
+router.post("/answer/:id",userAuthentication, answerQuestion);
 router.post(
   "/createcommunity/:id",
   upload.single("image"),
@@ -47,5 +48,7 @@ router.post(
 router.get("/communities", userAuthentication, getCommunity);
 router.get("/viewcommunity/:id", userAuthentication, getSingleCommunity);
 router.post("/join/:id", userAuthentication, joinCommunity);
+router.post("/create/:id",userAuthentication,createEvent)
+router.get("/events",userAuthentication,getEvents)
 
 module.exports = router;
