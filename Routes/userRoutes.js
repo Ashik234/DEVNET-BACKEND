@@ -14,6 +14,7 @@ const {
   answerQuestion,
   saveQuestion,
   getSavedQuestions,
+  searchQuestions,
 } = require("../controllers/questionController");
 const {
   createCommunity,
@@ -22,7 +23,7 @@ const {
   joinCommunity,
 } = require("../controllers/communityController");
 
-const { createEvent, getEvents } = require("../controllers/eventController");
+const { createEvent, getEvents, getSingleEvent } = require("../controllers/eventController");
 const { userAuthentication } = require("../Middlewares/userAuth");
 const upload = require("../Middlewares/multer");
 const router = express.Router();
@@ -39,6 +40,7 @@ router.get("/savedquestions/:id",userAuthentication,getSavedQuestions)
 router.get("/viewquestion/:id",userAuthentication, getSingleQuestion);
 router.post("/ask",userAuthentication, askQuestion);
 router.post("/answer/:id",userAuthentication, answerQuestion);
+router.get("/searchquestions",userAuthentication,searchQuestions)
 router.post(
   "/createcommunity/:id",
   upload.single("image"),
@@ -49,6 +51,7 @@ router.get("/communities", userAuthentication, getCommunity);
 router.get("/viewcommunity/:id", userAuthentication, getSingleCommunity);
 router.post("/join/:id", userAuthentication, joinCommunity);
 router.post("/create/:id",userAuthentication,createEvent)
-router.get("/events",userAuthentication,getEvents)
-
+router.get("/events/:id",userAuthentication,getEvents)
+router.get("/viewevent/:id",userAuthentication,getSingleEvent)
+ 
 module.exports = router;

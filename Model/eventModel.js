@@ -29,14 +29,18 @@ const eventSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    community:{
+    communityId:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "communities",
+        ref: "community",
     },
     registeredby:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
-    }]
+    }],
+    status:{
+        type:Boolean,
+        default:true
+    },
 })
 
 const eventModel = mongoose.model("event",eventSchema)

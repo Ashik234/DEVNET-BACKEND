@@ -48,7 +48,7 @@ const questionSchema = new mongoose.Schema({
         default: false,
       },
     },
-  ],
+  ],       
 });
 
 const questionModel = mongoose.model("questions", questionSchema);

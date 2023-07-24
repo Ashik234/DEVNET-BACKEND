@@ -36,6 +36,10 @@ const communitySchema = mongoose.Schema({
       },
     },
   ],
+  status:{
+    type:Boolean,
+    default:true
+  },
 });
 
 const communityModel = mongoose.model("community", communitySchema);

@@ -7,7 +7,7 @@ const crypto = require("crypto");
 
 const UserReg = async (req, res) => {
   try {
-    const { username, email, password,joinedDate } = req.body;
+    const { username, email, password,joinedDate,status } = req.body;
     const exists = await userModel.findOne({ email: email });
     if (exists) {
       return res
@@ -21,7 +21,8 @@ const UserReg = async (req, res) => {
         username,
         email,
         password: hashedpassword,
-        joinedDate
+        joinedDate,
+        status
       });
       let user = await newUser.save().then(console.log("Updated"));
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -62,7 +63,6 @@ const verification = async (req, res) => {
     const token1 = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: 6000000,
     });
-    console.log(token1);
     await userModel.updateOne({ _id: user._id }, { $set: { verified: true } });
     await Tokenmodel.deleteOne({ _id: token._id });
     res.status(200).json({user:user,token1, message: "Email Verification Successful"});
@@ -115,7 +115,7 @@ const UserLogin = async (req, res) => {
 
 const UserGoogleReg = async (req, res) => {
   try {
-    const { name, email, id, picture } = req.body;
+    const { name, email, id, picture,status } = req.body;
     const exists = await userModel.findOne({ email: email });
     if (exists) {
       return res
@@ -130,6 +130,7 @@ const UserGoogleReg = async (req, res) => {
         email: email,
         password: hashedpassword,
         image: picture,
+        status
       });
       let user = await newUser.save().then(console.log("updated"));
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -168,7 +169,6 @@ const UserGoogleLogin = async (req, res) => {
           .json({ alert: "Email or Password is wrong", status: false });
       }
     } else {
-      console.log("account not registered");
       return res
         .status(201)
         .json({ alert: "This email is not registered", status: false });

@@ -32,9 +32,13 @@ const userSchema = new mongoose.Schema({
   saved:[{
     questionId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "questions",
+      ref:"questions",
     },
-  }]
+  }],
+  status:{
+    type:Boolean,
+    default:true
+  },
 });
 
 const userModel = mongoose.model("users", userSchema);

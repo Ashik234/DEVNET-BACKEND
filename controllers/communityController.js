@@ -3,7 +3,7 @@ const { uploadToCloudinary } = require("../Config/Cloudinary");
 
 const createCommunity = async (req, res) => {
   try {
-    const { title, image, description, type, createdAt } = req.body;
+    const { title, image, description, type, createdAt,status } = req.body;
     const data = await uploadToCloudinary(image, "communities");
     console.log(data, "dataaaaaaaaaaaaaa");
     const userId = req.userId;
@@ -19,6 +19,7 @@ const createCommunity = async (req, res) => {
           role: "Admin",
         },
       ],
+      status
     });
     const community = await newCommunity.save();
     if (community) {
@@ -33,18 +34,18 @@ const createCommunity = async (req, res) => {
 
 const getCommunity = async (req, res) => {
   try {
-    let communityData = await communityModel.find({});
+    let communityData = await communityModel.find({ status: true });
     if (communityData) {
-      res
-        .status(200)
-        .json({ data: true, message: "Communities", communityData });
+      res.status(200).json({ data: true, message: "Communities", communityData });
     } else {
-      res.status(200).json({ data: false, message: "No Data Found" });
+      res.status(200).json({ data: false, message: "No Active Communities Found" });
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ data: false, message: "Internal Server Error" });
   }
 };
+
 
 const getSingleCommunity = async (req, res) => {
   try {

@@ -3,9 +3,10 @@ const userModel = require("../Model/userModel");
 
 const askQuestion = async (req, res) => {
   try {
-    const { user, title, description, tags, createdAt } = req.body;
+    const { title, description, tags, createdAt } = req.body;
+    const userId = req.userId;
     const newQuestion = new questionModel({
-      userId: user,
+      userId: userId,
       title,
       description,
       tags,
@@ -49,7 +50,7 @@ const saveQuestion = async (req, res) => {
     if (updatedProfile) {
       return res
         .status(200)
-        .json({ success: true, message: "Question Saved Successfully" });
+        .json({data:true, success: true, message: "Question Saved Successfully" ,updatedProfile});
     }
   } catch (error) {
     console.log(error);
@@ -127,6 +128,15 @@ const answerQuestion = async (req, res) => {
   }
 };
 
+
+const searchQuestions = async(req,res)=>{
+  try {
+    console.log("searchQuestions");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
 module.exports = {
   askQuestion,
   saveQuestion,
@@ -134,4 +144,5 @@ module.exports = {
   getSavedQuestions,
   getSingleQuestion,
   answerQuestion,
+  searchQuestions
 };
