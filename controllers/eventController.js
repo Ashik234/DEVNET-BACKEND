@@ -4,7 +4,6 @@ const communityModel = require("../Model/communityModel");
 const createEvent = async (req, res) => {
   try {
     const id = req.params.id;
-console.log(req.body);
     const { title, image, type, date, location, description, status } =
       req.body;
 
@@ -38,9 +37,9 @@ console.log(req.body);
   }
 };
 
-const getAllEvents = async(req,res)=>{
+const getAllEvents = async (req, res) => {
   try {
-    let eventData = await eventModel.find()
+    let eventData = await eventModel.find();
     if (eventData) {
       res.status(200).json({ data: true, message: "Events", eventData });
     } else {
@@ -49,7 +48,7 @@ const getAllEvents = async(req,res)=>{
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const getEvents = async (req, res) => {
   try {

@@ -203,7 +203,6 @@ const userGetDetails = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "not data found" });
-
     return res
       .status(200)
       .json({ success: true, message: "data obtained", userData });
@@ -215,7 +214,15 @@ const userGetDetails = async (req, res) => {
 
 const getSingleUser = async(req,res)=>{
   try {
-    console.log("ddddd");
+    let userId = req.userId;
+    const userData = await userModel.findOne({ _id: userId });
+    if (!userData)
+      return res
+        .status(404)
+        .json({ success: false, message: "not data found" });
+    return res
+      .status(200)
+      .json({ success: true, message: "data obtained", userData });
   } catch (error) {
     console.log(error);
   }
