@@ -3,6 +3,7 @@ const { uploadToCloudinary } = require("../Config/Cloudinary");
 
 const createCommunity = async (req, res) => {
   try {
+    console.log(req.body);
     const { title, image, description, type, createdAt,status } = req.body;
     const data = await uploadToCloudinary(image, "communities");
     console.log(data, "dataaaaaaaaaaaaaa");

@@ -128,7 +128,6 @@ const userAction = async (req, res) => {
     }
   };
   
-
 module.exports = {
     adminLogin,
     isAdminAuth,
@@ -137,5 +136,5 @@ module.exports = {
     communityDetails,
     userAction,
     eventAction,
-    communityAction
+    communityAction,
 }

@@ -6,6 +6,8 @@ const {
   UserGoogleLogin,
   verification,
   isUserAuth,
+  userGetDetails,
+  getSingleUser,
 } = require("../controllers/userController");
 const {
   askQuestion,
@@ -15,6 +17,8 @@ const {
   saveQuestion,
   getSavedQuestions,
   searchQuestions,
+  verifiedAnswer,
+  getAskedQuestions,
 } = require("../controllers/questionController");
 const {
   createCommunity,
@@ -23,9 +27,11 @@ const {
   joinCommunity,
 } = require("../controllers/communityController");
 
-const { createEvent, getEvents, getSingleEvent } = require("../controllers/eventController");
+const { createEvent, getEvents, getSingleEvent, getAllEvents } = require("../controllers/eventController");
 const { userAuthentication } = require("../Middlewares/userAuth");
 const upload = require("../Middlewares/multer");
+const { createChat, userChat, findChat } = require("../controllers/chatController");
+const { addMessage, getMessages } = require("../controllers/messageController");
 const router = express.Router();
 
 router.post("/register",UserReg);
@@ -34,12 +40,16 @@ router.post("/login",UserLogin);
 router.post("/googleLogin",UserGoogleLogin);
 router.get("/:id/verify/:token",verification);
 router.get("/userAuth",userAuthentication,isUserAuth);
+router.post("/usergetdetails/:userId", userAuthentication, userGetDetails);
+router.get("/profile/edit/:id",userAuthentication,getSingleUser)
 router.get("/questions",userAuthentication,getQuestions);
 router.post("/save/:id",userAuthentication,saveQuestion)
 router.get("/savedquestions/:id",userAuthentication,getSavedQuestions)
+router.get("/askedquestions/:id",userAuthentication,getAskedQuestions)
 router.get("/viewquestion/:id",userAuthentication, getSingleQuestion);
 router.post("/ask",userAuthentication, askQuestion);
 router.post("/answer/:id",userAuthentication, answerQuestion);
+router.post("/verified/:id",userAuthentication,verifiedAnswer)
 router.get("/searchquestions",userAuthentication,searchQuestions)
 router.post(
   "/createcommunity/:id",
@@ -51,7 +61,16 @@ router.get("/communities", userAuthentication, getCommunity);
 router.get("/viewcommunity/:id", userAuthentication, getSingleCommunity);
 router.post("/join/:id", userAuthentication, joinCommunity);
 router.post("/create/:id",userAuthentication,createEvent)
+router.get("/events",userAuthentication,getAllEvents)
 router.get("/events/:id",userAuthentication,getEvents)
 router.get("/viewevent/:id",userAuthentication,getSingleEvent)
+
+router.post("/createchat",createChat)
+router.get("/getchat/:userId",userChat)
+router.get("/findchat/:firstId/:secondId",findChat)
  
+router.post("/addmessage",addMessage)
+router.get("/getmessages/:chatId",getMessages)
+
+
 module.exports = router;

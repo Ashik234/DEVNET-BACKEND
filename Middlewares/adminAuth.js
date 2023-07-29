@@ -11,7 +11,8 @@ module.exports.adminAuthentication = async (req, res, next) => {
           res.status(401), json({ message: "Auth Failed", success: false })
         );
       } else {
-        req.adminId = decoded.adminId;
+        console.log(req._id);
+        req.id = decoded.id;
         next()
       }
     });

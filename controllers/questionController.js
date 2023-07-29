@@ -5,6 +5,7 @@ const askQuestion = async (req, res) => {
   try {
     const { title, description, tags, createdAt } = req.body;
     const userId = req.userId;
+    const user = await userModel.findById(userId);
     const newQuestion = new questionModel({
       userId: userId,
       title,
@@ -12,6 +13,8 @@ const askQuestion = async (req, res) => {
       tags,
       createdAt,
     });
+    user.asked.push({ questionId: newQuestion._id });
+    await user.save();
     let question = await newQuestion.save().catch((err) => console.log(err));
     if (question) {
       res
@@ -23,6 +26,7 @@ const askQuestion = async (req, res) => {
     return res.status(500).json({ error: true, message: error.message });
   }
 };
+
 
 const getQuestions = async (req, res) => {
   try {
@@ -42,11 +46,12 @@ const saveQuestion = async (req, res) => {
   try {
     const id = req.params.id;
     const userId = req.userId;
-
-    updatedProfile = await userModel.updateOne(
-      { _id: userId },
-      { $push: { saved: { questionId: id } } }
-    );
+console.log(id,"idddd");
+const updatedProfile = await userModel.findOneAndUpdate(
+  { _id: userId },
+  { $push: { saved: { questionId: id } } },
+  { new: true }
+);
     if (updatedProfile) {
       return res
         .status(200)
@@ -68,6 +73,24 @@ const getSavedQuestions = async (req, res) => {
       res
         .status(200)
         .json({ data: true, message: "SavedQuestions ", savedQuestions });
+    } else {
+      res.status(200).json({ data: false, message: "No Data Found" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getAskedQuestions = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const askedQuestions = await userModel
+      .findOne({ _id: userId })
+      .populate("asked.questionId");
+    if (askedQuestions) {
+      res
+        .status(200)
+        .json({ data: true, message: "AskedQuestions ", askedQuestions });
     } else {
       res.status(200).json({ data: false, message: "No Data Found" });
     }
@@ -128,21 +151,34 @@ const answerQuestion = async (req, res) => {
   }
 };
 
-
-const searchQuestions = async(req,res)=>{
+const verifiedAnswer = async(req,res)=>{
   try {
-    console.log("searchQuestions");
+    console.log("verifiedAnswer");
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
+
+const searchQuestions = async(req,res)=>{
+  try {
+    console.log("searchQuestions");
+    let questionData = await questionModel.find({}).populate("userId");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   askQuestion,
   saveQuestion,
   getQuestions,
   getSavedQuestions,
+  getAskedQuestions,
   getSingleQuestion,
   answerQuestion,
+  verifiedAnswer,
   searchQuestions
 };

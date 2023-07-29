@@ -35,6 +35,12 @@ const userSchema = new mongoose.Schema({
       ref:"questions",
     },
   }],
+  asked:[{
+    questionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"questions",
+    },
+  }],
   status:{
     type:Boolean,
     default:true

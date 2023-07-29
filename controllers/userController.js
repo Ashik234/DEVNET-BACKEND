@@ -194,6 +194,33 @@ const isUserAuth = async (req, res) => {
   }
 };
 
+
+const userGetDetails = async (req, res) => {
+  try {
+    let userId = req.params.userId;
+    const userData = await userModel.findOne({ _id: userId });
+    if (!userData)
+      return res
+        .status(404)
+        .json({ success: false, message: "not data found" });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "data obtained", userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+const getSingleUser = async(req,res)=>{
+  try {
+    console.log("ddddd");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   UserReg,
   UserLogin,
@@ -201,4 +228,6 @@ module.exports = {
   UserGoogleLogin,
   verification,
   isUserAuth,
+  userGetDetails,
+  getSingleUser
 };

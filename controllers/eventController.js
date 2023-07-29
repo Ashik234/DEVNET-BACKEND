@@ -4,7 +4,7 @@ const communityModel = require("../Model/communityModel");
 const createEvent = async (req, res) => {
   try {
     const id = req.params.id;
-
+console.log(req.body);
     const { title, image, type, date, location, description, status } =
       req.body;
 
@@ -37,6 +37,19 @@ const createEvent = async (req, res) => {
     res.status(500).json({ success: false, message: "Error creating event" });
   }
 };
+
+const getAllEvents = async(req,res)=>{
+  try {
+    let eventData = await eventModel.find()
+    if (eventData) {
+      res.status(200).json({ data: true, message: "Events", eventData });
+    } else {
+      res.status(200).json({ data: false, message: "No Active Events Found" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const getEvents = async (req, res) => {
   try {
@@ -77,6 +90,7 @@ const getSingleEvent = async (req, res) => {
 
 module.exports = {
   createEvent,
+  getAllEvents,
   getEvents,
   getSingleEvent,
 };
