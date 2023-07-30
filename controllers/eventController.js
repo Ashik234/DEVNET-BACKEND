@@ -1,12 +1,15 @@
 const eventModel = require("../Model/eventModel");
 const communityModel = require("../Model/communityModel");
+const { uploadToCloudinary } = require("../Config/Cloudinary");
 
 const createEvent = async (req, res) => {
   try {
     const id = req.params.id;
-    const { title, image, type, date, location, description, status } =
+    const url = req.file.path
+    const { title, type, date, location, description, status } =
       req.body;
-
+     const data = await uploadToCloudinary(url, "events");
+     const image = data.url
     const community = await communityModel.findById(id);
     if (!community) {
       return res

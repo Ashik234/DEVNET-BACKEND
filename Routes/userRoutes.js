@@ -84,11 +84,11 @@ router.get("/events/:id", userAuthentication, getEvents);
 router.get("/viewevent/:id", userAuthentication, getSingleEvent);
 
 router.post("/createchat", userAuthentication, createChat);
-router.get("/getchat/:userId", userAuthentication, userChat);
-router.get("/findchat/:firstId/:secondId", userAuthentication, findChat);
+router.get("/getchat/:userId",userAuthentication, userChat);
+router.get("/findchat/:firstId/:secondId", userAuthentication,findChat);
 
-router.post("/addmessage", userAuthentication, addMessage);
-router.get("/getmessages/:chatId", userAuthentication, getMessages);
+router.post("/addmessage",userAuthentication, addMessage);
+router.get("/getmessages/:chatId",userAuthentication, getMessages);
 
 router.post("/addchat", userAuthentication, addChat);
 router.get("/getallmessages/:id", userAuthentication, getAllMessage);
