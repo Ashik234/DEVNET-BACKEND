@@ -161,15 +161,22 @@ const verifiedAnswer = async(req,res)=>{
 }
 
 
-const searchQuestions = async(req,res)=>{
+const searchQuestions = async (req, res) => {
   try {
     console.log("searchQuestions");
-    let questionData = await questionModel.find({}).populate("userId");
+    const { query } = req.query; 
+    console.log(query,"gggggggggggggggggggggggggggggg");
+    const questionData = await questionModel
+      .find({ $text: { $search: query } }) 
+      .populate("userId");
+      console.log(questionData);
+    return res.status(200).json({ questionData });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
+
 
 module.exports = {
   askQuestion,

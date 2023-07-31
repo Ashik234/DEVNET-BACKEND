@@ -81,7 +81,6 @@ const userAction = async (req, res) => {
     try {
       const id = req.params.id;
       const user = await userModel.findById(id);
-  
       if (user) {
         await userModel.updateOne({ _id: id }, { $set: { status: !user.status } });
         res.status(200).json({ message: user.status ? "User Blocked" : "User UnBlocked" });
@@ -92,7 +91,7 @@ const userAction = async (req, res) => {
       console.error("Error updating user status:", error);
       res.status(500).json({ message: "Failed to update user status" });
     }
-  };
+  }; 
 
   const eventAction = async (req, res) => {
     try {

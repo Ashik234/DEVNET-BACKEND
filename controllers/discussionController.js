@@ -3,6 +3,7 @@ const Discussion = require("../Model/DiscussionModel")
 const addChat = async(req,res)=>{
     try {
         const {messages,communityId} = req.body
+        console.log(req.body);
         const userId = req.userId
         const messageObj = {
             message:messages,

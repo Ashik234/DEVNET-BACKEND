@@ -5,8 +5,8 @@ const createCommunity = async (req, res) => {
   try {
     const url = req.file.path
     const { title, description, type, createdAt,status } = req.body;
-     const data = await uploadToCloudinary(url, "communities");
-     const image = data.url
+    const data = await uploadToCloudinary(url, "communities");
+    const image = data.url
     const userId = req.userId;
     const newCommunity = new communityModel({
       title,
