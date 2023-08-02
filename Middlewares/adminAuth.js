@@ -8,11 +8,10 @@ module.exports.adminAuthentication = async (req, res, next) => {
       if (err) {
         console.log(err);
         return (
-          res.status(401), json({ message: "Auth Failed", success: false })
+          res.status(401).json({ message: "Auth Failed", success: false })
         );
       } else {
-        console.log(req._id);
-        req.id = decoded.id;
+        req.adminId = decoded.id;
         next()
       }
     });

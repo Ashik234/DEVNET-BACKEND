@@ -8,6 +8,7 @@ const {
   isUserAuth,
   userGetDetails,
   getSingleUser,
+  editProfile,
 } = require("../controllers/userController");
 const {
   askQuestion,
@@ -54,7 +55,6 @@ router.post("/googleLogin", UserGoogleLogin);
 router.get("/:id/verify/:token", verification);
 router.get("/userAuth", userAuthentication, isUserAuth);
 router.post("/usergetdetails/:userId", userAuthentication, userGetDetails);
-router.get("/profile/edit/:id", userAuthentication, getSingleUser);
 router.get("/questions", userAuthentication, getQuestions);
 router.post("/save/:id", userAuthentication, saveQuestion);
 router.get("/savedquestions/:id", userAuthentication, getSavedQuestions);

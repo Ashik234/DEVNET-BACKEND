@@ -27,7 +27,6 @@ const askQuestion = async (req, res) => {
   }
 };
 
-
 const getQuestions = async (req, res) => {
   try {
     let questionData = await questionModel.find({}).populate("userId");
@@ -46,26 +45,28 @@ const saveQuestion = async (req, res) => {
   try {
     const id = req.params.id;
     const userId = req.userId;
-console.log(id,"idddd");
-const updatedProfile = await userModel.findOneAndUpdate(
-  { _id: userId },
-  { $push: { saved: { questionId: id } } },
-  { new: true }
-);
+    const updatedProfile = await userModel.findOneAndUpdate(
+      { _id: userId },
+      { $push: { saved: { questionId: id } } },
+      { new: true }
+    );
     if (updatedProfile) {
-      return res
-        .status(200)
-        .json({data:true, success: true, message: "Question Saved Successfully" ,updatedProfile});
+      return res.status(200).json({
+        data: true,
+        success: true,
+        message: "Question Saved Successfully",
+        updatedProfile,
+      });
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
 const getSavedQuestions = async (req, res) => {
   try {
     const userId = req.userId;
-
     const savedQuestions = await userModel
       .findOne({ _id: userId })
       .populate("saved.questionId");
@@ -78,6 +79,7 @@ const getSavedQuestions = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -96,6 +98,7 @@ const getAskedQuestions = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -122,7 +125,9 @@ const getSingleQuestion = async (req, res) => {
 const answerQuestion = async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(req.body, "eeeeeeeeeeeeeeeee");
     const { answer } = req.body;
+    console.log(id, answer);
     const userId = req.userId;
     const existingQuestion = await questionModel.findOne({
       _id: id,
@@ -151,32 +156,28 @@ const answerQuestion = async (req, res) => {
   }
 };
 
-const verifiedAnswer = async(req,res)=>{
+const verifiedAnswer = async (req, res) => {
   try {
     console.log("verifiedAnswer");
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-}
-
+};
 
 const searchQuestions = async (req, res) => {
   try {
-    console.log("searchQuestions");
-    const { query } = req.query; 
-    console.log(query,"gggggggggggggggggggggggggggggg");
+    const { query } = req.query;
     const questionData = await questionModel
-      .find({ $text: { $search: query } }) 
+      .find({ $text: { $search: query } })
       .populate("userId");
-      console.log(questionData);
+    console.log(questionData);
     return res.status(200).json({ questionData });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 module.exports = {
   askQuestion,
@@ -187,5 +188,5 @@ module.exports = {
   getSingleQuestion,
   answerQuestion,
   verifiedAnswer,
-  searchQuestions
+  searchQuestions,
 };

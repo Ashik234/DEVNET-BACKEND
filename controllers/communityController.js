@@ -3,10 +3,10 @@ const { uploadToCloudinary } = require("../Config/Cloudinary");
 
 const createCommunity = async (req, res) => {
   try {
-    const url = req.file.path
-    const { title, description, type, createdAt,status } = req.body;
+    const url = req.file.path;
+    const { title, description, type, createdAt, status } = req.body;
     const data = await uploadToCloudinary(url, "communities");
-    const image = data.url
+    const image = data.url;
     const userId = req.userId;
     const newCommunity = new communityModel({
       title,
@@ -20,7 +20,7 @@ const createCommunity = async (req, res) => {
           role: "Admin",
         },
       ],
-      status
+      status,
     });
     const community = await newCommunity.save();
     if (community) {
@@ -30,6 +30,7 @@ const createCommunity = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -37,9 +38,13 @@ const getCommunity = async (req, res) => {
   try {
     let communityData = await communityModel.find({ status: true });
     if (communityData) {
-      res.status(200).json({ data: true, message: "Communities", communityData });
+      res
+        .status(200)
+        .json({ data: true, message: "Communities", communityData });
     } else {
-      res.status(200).json({ data: false, message: "No Active Communities Found" });
+      res
+        .status(200)
+        .json({ data: false, message: "No Active Communities Found" });
     }
   } catch (error) {
     console.log(error);
@@ -47,11 +52,12 @@ const getCommunity = async (req, res) => {
   }
 };
 
-
 const getSingleCommunity = async (req, res) => {
   try {
     const id = req.params.id;
-    let singlecommunity = await communityModel.findOne({ _id: id }).populate("members.member")
+    let singlecommunity = await communityModel
+      .findOne({ _id: id })
+      .populate("members.member");
     if (singlecommunity) {
       const numberOfMembers = singlecommunity.members.length;
       singlecommunity = {
@@ -66,6 +72,7 @@ const getSingleCommunity = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -78,13 +85,11 @@ const joinCommunity = async (req, res) => {
       { $push: { members: { member: userId, role: "Member" } } }
     );
     if (updatedCommunity) {
-      return res
-        .status(200)
-        .json({
-          success: true,
-          message: "Joined The Community Successfully",
-          updatedCommunity,
-        });
+      return res.status(200).json({
+        success: true,
+        message: "Joined The Community Successfully",
+        updatedCommunity,
+      });
     }
   } catch (error) {
     console.log(error);

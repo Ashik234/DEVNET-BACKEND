@@ -7,7 +7,7 @@ const crypto = require("crypto");
 
 const UserReg = async (req, res) => {
   try {
-    const { username, email, password,joinedDate,status } = req.body;
+    const { username, email, password, joinedDate, status } = req.body;
     const exists = await userModel.findOne({ email: email });
     if (exists) {
       return res
@@ -22,7 +22,7 @@ const UserReg = async (req, res) => {
         email,
         password: hashedpassword,
         joinedDate,
-        status
+        status,
       });
       let user = await newUser.save().then(console.log("Updated"));
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -34,16 +34,15 @@ const UserReg = async (req, res) => {
       }).save();
       const url = `${process.env.BASE_URL}/${user._id}/verify/${emailtoken.token}`;
       await sendEmail(user.email, "Verify Email", url);
-      return res
-        .status(201)
-        .json({
-          created: true,
-          message: "An Email Sent to your account please verify",
-          token: token,
-        });
+      return res.status(201).json({
+        created: true,
+        message: "An Email Sent to your account please verify",
+        token: token,
+      });
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -65,7 +64,9 @@ const verification = async (req, res) => {
     });
     await userModel.updateOne({ _id: user._id }, { $set: { verified: true } });
     await Tokenmodel.deleteOne({ _id: token._id });
-    res.status(200).json({user:user,token1, message: "Email Verification Successful"});
+    res
+      .status(200)
+      .json({ user: user, token1, message: "Email Verification Successful" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "internal server error" });
@@ -82,22 +83,18 @@ const UserLogin = async (req, res) => {
         const token = jwt.sign({ userId: exists._id }, process.env.JWT_SECRET, {
           expiresIn: 6000000,
         });
-        return res
-          .status(200)
-          .json({
-            user: exists,
-            token: token,
-            message: "Login Successfull",
-            status: true,
-          });
+        return res.status(200).json({
+          user: exists,
+          token: token,
+          message: "Login Successfull",
+          status: true,
+        });
       } else if (!exists.verified) {
-        res
-          .status(401)
-          .json({
-            message:
-              "Please Verify The Mail By Clicking The Link Sent To Your Mail",
-            status: false,
-          });
+        res.status(401).json({
+          message:
+            "Please Verify The Mail By Clicking The Link Sent To Your Mail",
+          status: false,
+        });
       } else {
         return res
           .status(404)
@@ -110,12 +107,13 @@ const UserLogin = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
 const UserGoogleReg = async (req, res) => {
   try {
-    const { name, email, id, picture,status } = req.body;
+    const { name, email, id, picture, status } = req.body;
     const exists = await userModel.findOne({ email: email });
     if (exists) {
       return res
@@ -130,7 +128,7 @@ const UserGoogleReg = async (req, res) => {
         email: email,
         password: hashedpassword,
         image: picture,
-        status
+        status,
       });
       let user = await newUser.save().then(console.log("updated"));
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -142,6 +140,7 @@ const UserGoogleReg = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -155,14 +154,12 @@ const UserGoogleLogin = async (req, res) => {
         const token = jwt.sign({ userId: access._id }, process.env.JWT_SECRET, {
           expiresIn: 600000,
         });
-        return res
-          .status(200)
-          .json({
-            user: exists,
-            token: token,
-            message: "login Successfull",
-            status: true,
-          });
+        return res.status(200).json({
+          user: exists,
+          token: token,
+          message: "login Successfull",
+          status: true,
+        });
       } else {
         return res
           .status(404)
@@ -175,12 +172,13 @@ const UserGoogleLogin = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 
 const isUserAuth = async (req, res) => {
   try {
-    const userData = await userModel.findOne({ _id:req.userId })
+    const userData = await userModel.findOne({ _id: req.userId });
     if (!userData) {
       return res
         .status(404)
@@ -193,7 +191,6 @@ const isUserAuth = async (req, res) => {
     return res.status(500).json({ success: false });
   }
 };
-
 
 const userGetDetails = async (req, res) => {
   try {
@@ -212,21 +209,7 @@ const userGetDetails = async (req, res) => {
   }
 };
 
-const getSingleUser = async(req,res)=>{
-  try {
-    let userId = req.userId;
-    const userData = await userModel.findOne({ _id: userId });
-    if (!userData)
-      return res
-        .status(404)
-        .json({ success: false, message: "not data found" });
-    return res
-      .status(200)
-      .json({ success: true, message: "data obtained", userData });
-  } catch (error) {
-    console.log(error);
-  }
-}
+
 
 module.exports = {
   UserReg,
@@ -236,5 +219,4 @@ module.exports = {
   verification,
   isUserAuth,
   userGetDetails,
-  getSingleUser
 };
