@@ -55,6 +55,7 @@ router.post("/login", UserLogin);
 router.post("/googleLogin", UserGoogleLogin);
 router.get("/:id/verify/:token", verification);
 router.get("/userAuth", userAuthentication, isUserAuth);
+router.post("/profile/edit/:id",upload.single("image"),userAuthentication,editProfile)
 router.post("/usergetdetails/:userId", userAuthentication, userGetDetails);
 router.get("/questions", userAuthentication, getQuestions);
 router.post("/questions/edit/:id",userAuthentication,editQuestions)

@@ -21,6 +21,15 @@ const userSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  github:{
+    type:String
+  },
+  linkedin:{
+    type:String
+  },
+  about:{
+    type:String
+  },
   joinedDate: {
     type: String,
     set: function() {

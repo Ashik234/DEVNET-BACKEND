@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const Tokenmodel = require("../Model/token");
 const sendEmail = require("../utils/nodeMailer");
 const crypto = require("crypto");
+const { uploadToCloudinary } = require("../Config/Cloudinary");
 
 const UserReg = async (req, res) => {
   try {
@@ -136,7 +137,12 @@ const UserGoogleReg = async (req, res) => {
       });
       return res
         .status(200)
-        .json({ created: true, message: "Account Registered", token: token ,user});
+        .json({
+          created: true,
+          message: "Account Registered",
+          token: token,
+          user,
+        });
     }
   } catch (error) {
     console.log(error);
@@ -209,7 +215,33 @@ const userGetDetails = async (req, res) => {
   }
 };
 
+const editProfile = async (req, res) => {
+  try {
+    console.log("eeeeeeeeeeeee");
+    const url = req.file.path;
+    console.log(url,"urlllll");
+    const { username, github, linkedin, about } = req.body;
+    const data = await uploadToCloudinary(url, "profile");
+    const image = data.url;
+    console.log(image,"dddd");
+    const id = req.userId;
+    const updatedUser = await userModel.findOneAndUpdate(
+      { _id: id },
+      { username,image, github, linkedin, about },
+      { new: true }
+    );
+    console.log(updatedUser);
 
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, error: "User not found." });
+    }
+
+    console.log(updatedUser);
+    return res.status(200).json({ success: true, user: updatedUser,message:"Profile Updated" });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
 
 module.exports = {
   UserReg,
@@ -219,4 +251,5 @@ module.exports = {
   verification,
   isUserAuth,
   userGetDetails,
+  editProfile,
 };
