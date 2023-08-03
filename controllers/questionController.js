@@ -30,7 +30,13 @@ const askQuestion = async (req, res) => {
 const getQuestions = async (req, res) => {
   try {
     let questionData = await questionModel.find({}).populate("userId");
+    
     if (questionData) {
+    questionData = questionData.map((question) => ({
+      ...question._doc, 
+      numAnswers: question.answers.length, 
+    }));
+console.log(questionData);
       res.status(200).json({ data: true, message: "Questions", questionData });
     } else {
       res.status(200).json({ data: false, message: "No Data Found" });
@@ -40,6 +46,27 @@ const getQuestions = async (req, res) => {
     return res.status(500).json({ error: true, message: error.message });
   }
 };
+
+const editQuestions = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, description, tags } = req.body;
+
+    const updatedQuestion = await questionModel.findOneAndUpdate(
+      { _id: id }, 
+      { title, description, tags }, 
+      { new: true }
+    );
+
+    if (!updatedQuestion) {
+      return res.status(404).json({ error: true, message: "Question not found." });
+    }
+    return res.status(200).json({message:"Question updated successfully",updatedQuestion});
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
+
 
 const saveQuestion = async (req, res) => {
   try {
@@ -183,6 +210,7 @@ module.exports = {
   askQuestion,
   saveQuestion,
   getQuestions,
+  editQuestions,
   getSavedQuestions,
   getAskedQuestions,
   getSingleQuestion,

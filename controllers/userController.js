@@ -136,7 +136,7 @@ const UserGoogleReg = async (req, res) => {
       });
       return res
         .status(200)
-        .json({ created: true, message: "Account Registered", token: token });
+        .json({ created: true, message: "Account Registered", token: token ,user});
     }
   } catch (error) {
     console.log(error);

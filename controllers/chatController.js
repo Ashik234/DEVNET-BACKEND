@@ -26,7 +26,8 @@ const userChat = async (req, res) => {
   try {
     const chat = await chatModel.find({
       members: { $in: [req.params.userId] },
-    });
+    }).sort({ createdAt: -1 });
+    console.log(chat,"dddddd");
     res.status(200).json({ chat });
   } catch (error) {
     console.log(error);

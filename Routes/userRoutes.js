@@ -20,6 +20,7 @@ const {
   searchQuestions,
   verifiedAnswer,
   getAskedQuestions,
+  editQuestions,
 } = require("../controllers/questionController");
 const {
   createCommunity,
@@ -56,6 +57,7 @@ router.get("/:id/verify/:token", verification);
 router.get("/userAuth", userAuthentication, isUserAuth);
 router.post("/usergetdetails/:userId", userAuthentication, userGetDetails);
 router.get("/questions", userAuthentication, getQuestions);
+router.post("/questions/edit/:id",userAuthentication,editQuestions)
 router.post("/save/:id", userAuthentication, saveQuestion);
 router.get("/savedquestions/:id", userAuthentication, getSavedQuestions);
 router.get("/askedquestions/:id", userAuthentication, getAskedQuestions);
