@@ -7,7 +7,6 @@ const {
   verification,
   isUserAuth,
   userGetDetails,
-  getSingleUser,
   editProfile,
 } = require("../controllers/userController");
 const {
@@ -21,6 +20,7 @@ const {
   verifiedAnswer,
   getAskedQuestions,
   editQuestions,
+  questionReport,
 } = require("../controllers/questionController");
 const {
   createCommunity,
@@ -55,10 +55,16 @@ router.post("/login", UserLogin);
 router.post("/googleLogin", UserGoogleLogin);
 router.get("/:id/verify/:token", verification);
 router.get("/userAuth", userAuthentication, isUserAuth);
-router.post("/profile/edit/:id",upload.single("image"),userAuthentication,editProfile)
+router.post(
+  "/profile/edit/:id",
+  upload.single("image"),
+  userAuthentication,
+  editProfile
+);
 router.post("/usergetdetails/:userId", userAuthentication, userGetDetails);
 router.get("/questions", userAuthentication, getQuestions);
-router.post("/questions/edit/:id",userAuthentication,editQuestions)
+router.post("/questions/edit/:id", userAuthentication, editQuestions);
+router.post("/questions/report/:id",userAuthentication,questionReport)
 router.post("/save/:id", userAuthentication, saveQuestion);
 router.get("/savedquestions/:id", userAuthentication, getSavedQuestions);
 router.get("/askedquestions/:id", userAuthentication, getAskedQuestions);
@@ -87,11 +93,11 @@ router.get("/events/:id", userAuthentication, getEvents);
 router.get("/viewevent/:id", userAuthentication, getSingleEvent);
 
 router.post("/createchat", userAuthentication, createChat);
-router.get("/getchat/:userId",userAuthentication, userChat);
-router.get("/findchat/:firstId/:secondId", userAuthentication,findChat);
+router.get("/getchat/:userId", userAuthentication, userChat);
+router.get("/findchat/:firstId/:secondId", userAuthentication, findChat);
 
-router.post("/addmessage",userAuthentication, addMessage);
-router.get("/getmessages/:chatId",userAuthentication, getMessages);
+router.post("/addmessage", userAuthentication, addMessage);
+router.get("/getmessages/:chatId", userAuthentication, getMessages);
 
 router.post("/addchat", userAuthentication, addChat);
 router.get("/getallmessages/:id", userAuthentication, getAllMessage);

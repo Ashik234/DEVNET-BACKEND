@@ -1,4 +1,5 @@
 const questionModel = require("../Model/questionModel");
+const reportModel = require("../Model/reportModel");
 const userModel = require("../Model/userModel");
 
 const askQuestion = async (req, res) => {
@@ -29,14 +30,13 @@ const askQuestion = async (req, res) => {
 
 const getQuestions = async (req, res) => {
   try {
-    let questionData = await questionModel.find({}).populate("userId");
+    let questionData = await questionModel.find({status:true}).populate("userId");
     
     if (questionData) {
     questionData = questionData.map((question) => ({
       ...question._doc, 
       numAnswers: question.answers.length, 
     }));
-console.log(questionData);
       res.status(200).json({ data: true, message: "Questions", questionData });
     } else {
       res.status(200).json({ data: false, message: "No Data Found" });
@@ -66,6 +66,26 @@ const editQuestions = async (req, res) => {
     return res.status(500).json({ error: true, message: error.message });
   }
 };
+
+const questionReport = async(req,res)=>{
+  try {
+      const id = req.params.id
+      const {reason}= req.body
+      const report = new reportModel({
+        reason ,
+        questionId :id
+      })
+      let newReport = report.save()
+      if(newReport){
+        res
+        .status(200)
+        .json({ success: true, message: "Question Reported Successfully" });
+      }
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: true, message: error.message });
+  }
+}
 
 
 const saveQuestion = async (req, res) => {
@@ -211,6 +231,7 @@ module.exports = {
   saveQuestion,
   getQuestions,
   editQuestions,
+  questionReport,
   getSavedQuestions,
   getAskedQuestions,
   getSingleQuestion,

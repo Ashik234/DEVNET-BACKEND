@@ -2,7 +2,9 @@ const adminModel = require("../Model/adminModel");
 const userModel = require("../Model/userModel");
 const eventModel = require("../Model/eventModel");
 const communityModel = require("../Model/communityModel");
+const reportModel = require("../Model/reportModel");
 const jwt = require("jsonwebtoken");
+const questionModel = require("../Model/questionModel");
 
 const adminLogin = async (req, res) => {
   try {
@@ -88,6 +90,23 @@ const communityDetails = async (req, res) => {
   }
 };
 
+const reportDetails = async(req,res)=>{
+  try {
+    const reportData = await reportModel.find({}).populate("questionId")
+    console.log(reportData);
+    if(reportData){
+      res
+        .status(200)
+        .json({ data: true, message: "Communities", reportData });
+    }else {
+      res.status(400).json({ data: false, message: "Data not found" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: true, message: error.message });
+  }
+}
+
 const userAction = async (req, res) => {
   try {
     const id = req.params.id;
@@ -134,6 +153,7 @@ const eventAction = async (req, res) => {
 const communityAction = async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(id);
     const community = await communityModel.findById(id);
 
     if (community) {
@@ -147,13 +167,38 @@ const communityAction = async (req, res) => {
           message: community.status ? "Community Unlisted" : "Community Listed",
         });
     } else {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "Community not found" });
     }
   } catch (error) {
-    console.error("Error updating user status:", error);
-    res.status(500).json({ message: "Failed to update user status" });
+    console.error("Error updating Community status:", error);
+    res.status(500).json({ message: "Failed to update Community status" });
   }
 };
+
+const reportAction = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const report = await questionModel.findById(id)
+    if (report) {
+      await questionModel.updateOne(
+        { _id: id },
+        { $set: { status: !report.status } }
+      );
+      res
+        .status(200)
+        .json({
+          message: report.status ? "Question Unlisted" : "Question Listed",
+        });
+    } else {
+      res.status(404).json({ message: "Question not found" });
+    }
+  } catch (error) {
+    console.error("Error updating Question status:", error);
+    res.status(500).json({ message: "Failed to update Question status" });
+  }
+};
+
+
 
 module.exports = {
   adminLogin,
@@ -161,7 +206,9 @@ module.exports = {
   userDetails,
   eventDetails,
   communityDetails,
+  reportDetails,
   userAction,
   eventAction,
   communityAction,
+  reportAction
 };

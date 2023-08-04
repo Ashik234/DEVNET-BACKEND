@@ -5,6 +5,7 @@ const Tokenmodel = require("../Model/token");
 const sendEmail = require("../utils/nodeMailer");
 const crypto = require("crypto");
 const { uploadToCloudinary } = require("../Config/Cloudinary");
+const { log } = require("console");
 
 const UserReg = async (req, res) => {
   try {
@@ -200,8 +201,11 @@ const isUserAuth = async (req, res) => {
 
 const userGetDetails = async (req, res) => {
   try {
+    console.log("ddddddd");
     let userId = req.params.userId;
+    console.log(userId);
     const userData = await userModel.findOne({ _id: userId });
+    console.log(userData);
     if (!userData)
       return res
         .status(404)
@@ -217,13 +221,10 @@ const userGetDetails = async (req, res) => {
 
 const editProfile = async (req, res) => {
   try {
-    console.log("eeeeeeeeeeeee");
     const url = req.file.path;
-    console.log(url,"urlllll");
     const { username, github, linkedin, about } = req.body;
     const data = await uploadToCloudinary(url, "profile");
     const image = data.url;
-    console.log(image,"dddd");
     const id = req.userId;
     const updatedUser = await userModel.findOneAndUpdate(
       { _id: id },

@@ -50,7 +50,11 @@ const questionSchema = new mongoose.Schema({
         default: false,
       },
     },
-  ],       
+  ],
+  status:{
+    type:Boolean,
+    default:true
+  },    
 });
 
 const questionModel = mongoose.model("questions", questionSchema);
