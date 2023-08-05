@@ -201,11 +201,9 @@ const isUserAuth = async (req, res) => {
 
 const userGetDetails = async (req, res) => {
   try {
-    console.log("ddddddd");
     let userId = req.params.userId;
     console.log(userId);
     const userData = await userModel.findOne({ _id: userId });
-    console.log(userData);
     if (!userData)
       return res
         .status(404)

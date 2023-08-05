@@ -5,6 +5,9 @@ const communityModel = require("../Model/communityModel");
 const reportModel = require("../Model/reportModel");
 const jwt = require("jsonwebtoken");
 const questionModel = require("../Model/questionModel");
+const articleModel = require("../Model/articleModel")
+const { uploadToCloudinary } = require("../Config/Cloudinary");
+
 
 const adminLogin = async (req, res) => {
   try {
@@ -81,6 +84,48 @@ const communityDetails = async (req, res) => {
       res
         .status(200)
         .json({ data: true, message: "Communities", communityData });
+    } else {
+      res.status(400).json({ data: false, message: "Data not found" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
+
+const addArticle = async(req,res)=>{
+  try {
+    const url = req.file.path
+    const { title, description,status } = req.body;
+    const data = await uploadToCloudinary(url,"article");
+    const image = data.url;
+    const newArticle = new articleModel({
+      title,
+      image:image,
+      description,
+      status
+    })
+    const article = await newArticle.save();
+    if (article) {
+      res
+        .status(200)
+        .json({ success: true, message: "Article Created Successfully" });
+    }
+
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: true, message: error.message });
+  }
+}
+
+const articleDetails = async (req, res) => {
+  try {
+    const articleData = await articleModel.find({});
+    console.log(articleData);
+    if (articleData) {
+      res
+        .status(200)
+        .json({ data: true, message: "Articles", articleData });
     } else {
       res.status(400).json({ data: false, message: "Data not found" });
     }
@@ -175,6 +220,32 @@ const communityAction = async (req, res) => {
   }
 };
 
+const articleAction = async (req, res) => {
+  try {
+    console.log("hhhhhhh");
+    const id = req.params.id;
+    console.log(id);
+    const article = await articleModel.findById(id);
+
+    if (article) {
+      await articleModel.updateOne(
+        { _id: id },
+        { $set: { status: !article.status } }
+      );
+      res
+        .status(200)
+        .json({
+          message: article.status ? "Article Unlisted" : "Article Listed",
+        });
+    } else {
+      res.status(404).json({ message: "Article not found" });
+    }
+  } catch (error) {
+    console.error("Error updating Article status:", error);
+    res.status(500).json({ message: "Failed to update Article status" });
+  }
+};
+
 const reportAction = async (req, res) => {
   try {
     const id = req.params.id;
@@ -198,17 +269,18 @@ const reportAction = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   adminLogin,
   isAdminAuth,
   userDetails,
   eventDetails,
   communityDetails,
+  addArticle,
+  articleDetails,
   reportDetails,
   userAction,
   eventAction,
   communityAction,
+  articleAction,
   reportAction
 };
