@@ -5,7 +5,6 @@ const Tokenmodel = require("../Model/token");
 const sendEmail = require("../utils/nodeMailer");
 const crypto = require("crypto");
 const { uploadToCloudinary } = require("../Config/Cloudinary");
-const { log } = require("console");
 
 const UserReg = async (req, res) => {
   try {

@@ -172,17 +172,16 @@ const getSingleQuestion = async (req, res) => {
 const answerQuestion = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(req.body, "eeeeeeeeeeeeeeeee");
     const { answer } = req.body;
-    console.log(id, answer);
     const userId = req.userId;
+
     const existingQuestion = await questionModel.findOne({
       _id: id,
-      "answers.answer": answer,
+      "answers.userId": userId,
     });
 
     if (existingQuestion) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "You've already answered this question",
       });
@@ -203,9 +202,20 @@ const answerQuestion = async (req, res) => {
   }
 };
 
+const editAnswer = async(req,res)=>{
+  try {
+    console.log("editAnswer");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 const verifiedAnswer = async (req, res) => {
   try {
     console.log("verifiedAnswer");
+    const id = req.params.id
+    console.log(id);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -218,7 +228,6 @@ const searchQuestions = async (req, res) => {
     const questionData = await questionModel
       .find({ $text: { $search: query } })
       .populate("userId");
-    console.log(questionData);
     return res.status(200).json({ questionData });
   } catch (error) {
     console.log(error);
