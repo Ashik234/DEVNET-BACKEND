@@ -204,7 +204,17 @@ const answerQuestion = async (req, res) => {
 
 const editAnswer = async(req,res)=>{
   try {
-    console.log("editAnswer");
+    const id = req.params.id;
+    const {answer} = req.body
+    const updatedAnswer = await questionModel.findOneAndUpdate(
+      { "answers._id": id },
+      { "$set": { "answers.$.answer": answer } },
+      { new: true }
+    );
+    if (!updatedAnswer) {
+      return res.status(404).json({ error: true, message: "Answer not found." });
+    }
+    return res.status(200).json({message:"Answer updated successfully",updatedAnswer});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -213,9 +223,17 @@ const editAnswer = async(req,res)=>{
 
 const verifiedAnswer = async (req, res) => {
   try {
-    console.log("verifiedAnswer");
     const id = req.params.id
-    console.log(id);
+    const updatedAnswer = await questionModel.findOneAndUpdate(
+      { "answers._id": id },
+      { "$set": { "answers.$.verified": true } },
+      { new: true }
+    );
+    if (!updatedAnswer) {
+      return res.status(404).json({ error: true, message: "Answer not found." });
+    }
+    return res.status(200).json({message:"Answer verified successfully",updatedAnswer});
+
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -245,6 +263,7 @@ module.exports = {
   getAskedQuestions,
   getSingleQuestion,
   answerQuestion,
+  editAnswer,
   verifiedAnswer,
   searchQuestions,
 };

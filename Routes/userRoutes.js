@@ -21,6 +21,7 @@ const {
   getAskedQuestions,
   editQuestions,
   questionReport,
+  editAnswer,
 } = require("../controllers/questionController");
 const {
   createCommunity,
@@ -71,6 +72,7 @@ router.get("/askedquestions/:id", userAuthentication, getAskedQuestions);
 router.get("/viewquestion/:id", userAuthentication, getSingleQuestion);
 router.post("/ask", userAuthentication, askQuestion);
 router.post("/answer/:id", userAuthentication, answerQuestion);
+router.post("/answer/edit/:id",userAuthentication,editAnswer)
 router.post("/verified/:id", userAuthentication, verifiedAnswer);
 router.get("/searchquestions", userAuthentication, searchQuestions);
 router.post(
