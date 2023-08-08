@@ -97,9 +97,25 @@ const joinCommunity = async (req, res) => {
   }
 };
 
+const searchCommunity = async (req, res) => {
+  try {
+    const { query } = req.query;
+    console.log(query);
+    const communityData = await communityModel.find({
+      $text: { $search: query },
+    });
+    console.log(communityData);
+    return res.status(200).json({ communityData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createCommunity,
   getCommunity,
   getSingleCommunity,
   joinCommunity,
+  searchCommunity,
 };

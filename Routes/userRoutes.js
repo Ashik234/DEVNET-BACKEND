@@ -28,6 +28,7 @@ const {
   getCommunity,
   getSingleCommunity,
   joinCommunity,
+  searchCommunity,
 } = require("../controllers/communityController");
 
 const {
@@ -35,6 +36,7 @@ const {
   getEvents,
   getSingleEvent,
   getAllEvents,
+  searchEvents,
 } = require("../controllers/eventController");
 const { userAuthentication } = require("../Middlewares/userAuth");
 const upload = require("../Middlewares/multer");
@@ -90,9 +92,12 @@ router.post(
   userAuthentication,
   createEvent
 );
+router.get("/searchcommunity",userAuthentication,searchCommunity)
+
 router.get("/events", userAuthentication, getAllEvents);
 router.get("/events/:id", userAuthentication, getEvents);
 router.get("/viewevent/:id", userAuthentication, getSingleEvent);
+router.get("/searchevents",userAuthentication,searchEvents)
 
 router.post("/createchat", userAuthentication, createChat);
 router.get("/getchat/:userId", userAuthentication, userChat);

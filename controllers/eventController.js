@@ -57,7 +57,6 @@ const getEvents = async (req, res) => {
   try {
     const id = req.params.id;
     let eventData = await eventModel.find({ communityId: id, status: true });
-
     if (eventData) {
       res.status(200).json({ data: true, message: "Events", eventData });
     } else {
@@ -91,9 +90,23 @@ const getSingleEvent = async (req, res) => {
   }
 };
 
+const searchEvents = async (req, res) => {
+  try {
+    const { query } = req.query;
+    console.log(query);
+    const eventData = await eventModel.find({ $text: { $search: query } });
+    console.log(eventData);
+    return res.status(200).json({ eventData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createEvent,
   getAllEvents,
   getEvents,
   getSingleEvent,
+  searchEvents,
 };

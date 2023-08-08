@@ -5,9 +5,8 @@ const communityModel = require("../Model/communityModel");
 const reportModel = require("../Model/reportModel");
 const jwt = require("jsonwebtoken");
 const questionModel = require("../Model/questionModel");
-const articleModel = require("../Model/articleModel")
+const articleModel = require("../Model/articleModel");
 const { uploadToCloudinary } = require("../Config/Cloudinary");
-
 
 const adminLogin = async (req, res) => {
   try {
@@ -45,6 +44,24 @@ const isAdminAuth = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const userCount = async (req, res) => {
+  try {
+    const count = await userModel.countDocuments({});
+    res.json({ count, message: "user count obtained" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const reportCount = async (req, res) => {
+  try {
+    const count = await reportModel.countDocuments({});
+    res.json({ count, message: "report count obtained" });
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
@@ -93,39 +110,36 @@ const communityDetails = async (req, res) => {
   }
 };
 
-const addArticle = async(req,res)=>{
+const addArticle = async (req, res) => {
   try {
-    const url = req.file.path
-    const { title, description,status } = req.body;
-    const data = await uploadToCloudinary(url,"article");
+    const url = req.file.path;
+    const { title, description, status } = req.body;
+    const data = await uploadToCloudinary(url, "article");
     const image = data.url;
     const newArticle = new articleModel({
       title,
-      image:image,
+      image: image,
       description,
-      status
-    })
+      status,
+    });
     const article = await newArticle.save();
     if (article) {
       res
         .status(200)
         .json({ success: true, message: "Article Created Successfully" });
     }
-
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ error: true, message: error.message });
   }
-}
+};
 
 const articleDetails = async (req, res) => {
   try {
     const articleData = await articleModel.find({});
     console.log(articleData);
     if (articleData) {
-      res
-        .status(200)
-        .json({ data: true, message: "Articles", articleData });
+      res.status(200).json({ data: true, message: "Articles", articleData });
     } else {
       res.status(400).json({ data: false, message: "Data not found" });
     }
@@ -135,22 +149,20 @@ const articleDetails = async (req, res) => {
   }
 };
 
-const reportDetails = async(req,res)=>{
+const reportDetails = async (req, res) => {
   try {
-    const reportData = await reportModel.find({}).populate("questionId")
+    const reportData = await reportModel.find({}).populate("questionId");
     console.log(reportData);
-    if(reportData){
-      res
-        .status(200)
-        .json({ data: true, message: "Communities", reportData });
-    }else {
+    if (reportData) {
+      res.status(200).json({ data: true, message: "Communities", reportData });
+    } else {
       res.status(400).json({ data: false, message: "Data not found" });
     }
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ error: true, message: error.message });
   }
-}
+};
 
 const userAction = async (req, res) => {
   try {
@@ -206,11 +218,9 @@ const communityAction = async (req, res) => {
         { _id: id },
         { $set: { status: !community.status } }
       );
-      res
-        .status(200)
-        .json({
-          message: community.status ? "Community Unlisted" : "Community Listed",
-        });
+      res.status(200).json({
+        message: community.status ? "Community Unlisted" : "Community Listed",
+      });
     } else {
       res.status(404).json({ message: "Community not found" });
     }
@@ -222,7 +232,6 @@ const communityAction = async (req, res) => {
 
 const articleAction = async (req, res) => {
   try {
-    console.log("hhhhhhh");
     const id = req.params.id;
     console.log(id);
     const article = await articleModel.findById(id);
@@ -232,11 +241,9 @@ const articleAction = async (req, res) => {
         { _id: id },
         { $set: { status: !article.status } }
       );
-      res
-        .status(200)
-        .json({
-          message: article.status ? "Article Unlisted" : "Article Listed",
-        });
+      res.status(200).json({
+        message: article.status ? "Article Unlisted" : "Article Listed",
+      });
     } else {
       res.status(404).json({ message: "Article not found" });
     }
@@ -249,17 +256,15 @@ const articleAction = async (req, res) => {
 const reportAction = async (req, res) => {
   try {
     const id = req.params.id;
-    const report = await questionModel.findById(id)
+    const report = await questionModel.findById(id);
     if (report) {
       await questionModel.updateOne(
         { _id: id },
         { $set: { status: !report.status } }
       );
-      res
-        .status(200)
-        .json({
-          message: report.status ? "Question Unlisted" : "Question Listed",
-        });
+      res.status(200).json({
+        message: report.status ? "Question Unlisted" : "Question Listed",
+      });
     } else {
       res.status(404).json({ message: "Question not found" });
     }
@@ -272,6 +277,8 @@ const reportAction = async (req, res) => {
 module.exports = {
   adminLogin,
   isAdminAuth,
+  userCount,
+  reportCount,
   userDetails,
   eventDetails,
   communityDetails,
@@ -282,5 +289,5 @@ module.exports = {
   eventAction,
   communityAction,
   articleAction,
-  reportAction
+  reportAction,
 };

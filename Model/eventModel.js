@@ -1,48 +1,52 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const eventSchema = mongoose.Schema({
-    title:{
-        type:String,
-        required:true
+  title: {
+    type: String,
+    required: true,
+    index: "text",
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+    index: "text",
+  },
+  date: {
+    type: String,
+    set: function () {
+      const date = new Date();
+      const options = { day: "numeric", month: "long", year: "numeric" };
+      return date.toLocaleDateString("en-US", options);
     },
-    image:{
-        type:String,
-        required:true
+  },
+  location: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  communityId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "community",
+  },
+  registeredby: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
     },
-    type:{
-        type:String,
-        required:true
-    },
-    date: {
-        type: String,
-        set: function () {
-          const date = new Date();
-          const options = { day: "numeric", month: "long", year: "numeric" };
-          return date.toLocaleDateString("en-US", options);
-        },
-    },
-    location:{
-        type:String,
-        required:true
-    },
-    description:{
-        type:String,
-        required:true
-    },
-    communityId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "community",
-    },
-    registeredby:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-    }],
-    status:{
-        type:Boolean,
-        default:true
-    },
-})
+  ],
+  status: {
+    type: Boolean,
+    default: true,
+  },
+});
 
-const eventModel = mongoose.model("event",eventSchema)
+const eventModel = mongoose.model("event", eventSchema);
 
-module.exports = eventModel
+module.exports = eventModel;

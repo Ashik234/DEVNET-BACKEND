@@ -1,5 +1,5 @@
 const express=require("express")
-const { adminLogin, isAdminAuth, userDetails, eventDetails, communityDetails, userAction, eventAction, communityAction, reportDetails, reportAction, addArticle, articleDetails, articleAction } = require("../controllers/adminController")
+const { adminLogin, isAdminAuth, userDetails, eventDetails, communityDetails, userAction, eventAction, communityAction, reportDetails, reportAction, addArticle, articleDetails, articleAction, userCount, reportCount } = require("../controllers/adminController")
 const { adminAuthentication } = require("../Middlewares/adminAuth")
 const { userAuthentication } = require("../Middlewares/userAuth")
 const router = express.Router()
@@ -7,6 +7,8 @@ const upload = require("../Middlewares/multer");
 
 router.post("/login",adminLogin)
 router.get("/adminAuth",adminAuthentication,isAdminAuth)
+router.get("/usercount",adminAuthentication,userCount)
+router.get("/reportcount",adminAuthentication,reportCount)
 router.get("/users",adminAuthentication,userDetails)
 router.get("/events",adminAuthentication,eventDetails)
 router.get("/communities",adminAuthentication,communityDetails)

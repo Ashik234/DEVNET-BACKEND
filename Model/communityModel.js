@@ -4,14 +4,16 @@ const communitySchema = mongoose.Schema({
   title: {
     type: String,
     required: true,
+    index: "text",
   },
   image: {
     type: String,
-    required:true
+    required: true,
   },
   type: {
     type: String,
     required: true,
+    index: "text",
   },
   description: {
     type: String,
@@ -36,9 +38,9 @@ const communitySchema = mongoose.Schema({
       },
     },
   ],
-  status:{
-    type:Boolean,
-    default:true
+  status: {
+    type: Boolean,
+    default: true,
   },
 });
 
