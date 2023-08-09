@@ -22,6 +22,8 @@ const {
   editQuestions,
   questionReport,
   editAnswer,
+  getArticles,
+  getSingleArticle,
 } = require("../controllers/questionController");
 const {
   createCommunity,
@@ -77,6 +79,9 @@ router.post("/answer/:id", userAuthentication, answerQuestion);
 router.post("/answer/edit/:id",userAuthentication,editAnswer)
 router.post("/verified/:id", userAuthentication, verifiedAnswer);
 router.get("/searchquestions", userAuthentication, searchQuestions);
+router.get("/articles",userAuthentication,getArticles)
+router.get("/viewarticle/:id", userAuthentication, getSingleArticle);
+
 router.post(
   "/createcommunity/:id",
   upload.single("image"),

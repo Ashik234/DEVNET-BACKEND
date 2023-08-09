@@ -134,10 +134,32 @@ const addArticle = async (req, res) => {
   }
 };
 
+const editArticle = async (req, res) => {
+  try {
+    const url = req.file.path;
+    const id = req.params.id
+    const { title, description, status } = req.body;
+    const data = await uploadToCloudinary(url, "article");
+    const image = data.url;
+   const updatedArticle = await articleModel.findOneAndUpdate(
+    {_id:id},
+    {title,image,description},
+    {new:true}
+   )
+    if (updatedArticle) {
+      res
+        .status(200)
+        .json({ success: true, message: "Article Updated Successfully" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
+
 const articleDetails = async (req, res) => {
   try {
     const articleData = await articleModel.find({});
-    console.log(articleData);
     if (articleData) {
       res.status(200).json({ data: true, message: "Articles", articleData });
     } else {
@@ -283,6 +305,7 @@ module.exports = {
   eventDetails,
   communityDetails,
   addArticle,
+  editArticle,
   articleDetails,
   reportDetails,
   userAction,

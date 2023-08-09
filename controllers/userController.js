@@ -228,13 +228,11 @@ const editProfile = async (req, res) => {
       { username,image, github, linkedin, about },
       { new: true }
     );
-    console.log(updatedUser);
 
     if (!updatedUser) {
       return res.status(404).json({ success: false, error: "User not found." });
     }
 
-    console.log(updatedUser);
     return res.status(200).json({ success: true, user: updatedUser,message:"Profile Updated" });
   } catch (error) {
     return res.status(500).json({ success: false, error: "Server Error" });

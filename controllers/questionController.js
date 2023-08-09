@@ -1,6 +1,7 @@
 const questionModel = require("../Model/questionModel");
 const reportModel = require("../Model/reportModel");
 const userModel = require("../Model/userModel");
+const articleModel = require("../Model/articleModel");
 
 const askQuestion = async (req, res) => {
   try {
@@ -92,6 +93,15 @@ const saveQuestion = async (req, res) => {
   try {
     const id = req.params.id;
     const userId = req.userId;
+
+    const user = await userModel.findOne({ _id: userId, "saved.questionId": id });
+    if (user) {
+      return res.status(200).json({
+        data: false,
+        success: false,
+        message: "Question Already Saved",
+      });
+    }
     const updatedProfile = await userModel.findOneAndUpdate(
       { _id: userId },
       { $push: { saved: { questionId: id } } },
@@ -253,6 +263,38 @@ const searchQuestions = async (req, res) => {
   }
 };
 
+const getArticles = async(req,res)=>{
+  try {
+    const articleData = await articleModel.find({});
+    if (articleData) {
+      res.status(200).json({ data: true, message: "Articles", articleData });
+    } else {
+      res.status(400).json({ data: false, message: "Data not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+    
+  }
+}
+
+const getSingleArticle = async(req,res)=>{
+  try {
+    const id = req.params.id;
+    let singleArticle= await articleModel
+      .findOne({ _id: id })
+    if (singleArticle) {
+      res
+        .status(200)
+        .json({ data: true, message: "Single Question", singleArticle });
+    } else {
+      res.status(200).json({ data: false, message: "No Data Found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  
+  }
+}
+
 module.exports = {
   askQuestion,
   saveQuestion,
@@ -266,4 +308,7 @@ module.exports = {
   editAnswer,
   verifiedAnswer,
   searchQuestions,
+  getArticles,
+  getSingleArticle
+
 };
