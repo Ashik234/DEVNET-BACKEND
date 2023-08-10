@@ -6,7 +6,6 @@ const createChat = async (req, res) => {
       members: { $all: [req.body.senderId, req.body.receiverId] },
     });
     if (exists) {
-      console.log(exists, "haiiii");
       return res
         .status(200)
         .json({ message: "chat already exists", chatData: exists });
@@ -27,7 +26,6 @@ const userChat = async (req, res) => {
     const chat = await chatModel.find({
       members: { $in: [req.params.userId] },
     }).sort({ createdAt: -1 });
-    console.log(chat,"dddddd");
     res.status(200).json({ chat });
   } catch (error) {
     console.log(error);
@@ -37,8 +35,6 @@ const userChat = async (req, res) => {
 
 const findChat = async (req, res) => {
   try {
-    console.log(req.params.firstId, "fffffff");
-    console.log(req.params.secondId, "sssssssssss");
     const chat = await chatModel.find({
       members: { $all: [req.params.firstId, req.params.secondId] },
     });

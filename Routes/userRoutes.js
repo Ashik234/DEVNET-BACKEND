@@ -69,17 +69,17 @@ router.post(
 router.post("/usergetdetails/:userId", userAuthentication, userGetDetails);
 router.get("/questions", userAuthentication, getQuestions);
 router.post("/questions/edit/:id", userAuthentication, editQuestions);
-router.post("/questions/report/:id",userAuthentication,questionReport)
+router.post("/questions/report/:id", userAuthentication, questionReport);
 router.post("/save/:id", userAuthentication, saveQuestion);
 router.get("/savedquestions/:id", userAuthentication, getSavedQuestions);
 router.get("/askedquestions/:id", userAuthentication, getAskedQuestions);
 router.get("/viewquestion/:id", userAuthentication, getSingleQuestion);
 router.post("/ask", userAuthentication, askQuestion);
 router.post("/answer/:id", userAuthentication, answerQuestion);
-router.post("/answer/edit/:id",userAuthentication,editAnswer)
+router.post("/answer/edit/:id", userAuthentication, editAnswer);
 router.post("/verified/:id", userAuthentication, verifiedAnswer);
 router.get("/searchquestions", userAuthentication, searchQuestions);
-router.get("/articles",userAuthentication,getArticles)
+router.get("/articles", userAuthentication, getArticles);
 router.get("/viewarticle/:id", userAuthentication, getSingleArticle);
 
 router.post(
@@ -97,12 +97,12 @@ router.post(
   userAuthentication,
   createEvent
 );
-router.get("/searchcommunity",userAuthentication,searchCommunity)
+router.get("/searchcommunity", userAuthentication, searchCommunity);
 
 router.get("/events", userAuthentication, getAllEvents);
 router.get("/events/:id", userAuthentication, getEvents);
 router.get("/viewevent/:id", userAuthentication, getSingleEvent);
-router.get("/searchevents",userAuthentication,searchEvents)
+router.get("/searchevents", userAuthentication, searchEvents);
 
 router.post("/createchat", userAuthentication, createChat);
 router.get("/getchat/:userId", userAuthentication, userChat);

@@ -20,4 +20,5 @@ router.get("/eventaction/:id",adminAuthentication,eventAction)
 router.get("/communityaction/:id",adminAuthentication,communityAction)
 router.get("/articleaction/:id",adminAuthentication,articleAction)
 router.get("/reportaction/:id",adminAuthentication,reportAction)
+
 module.exports = router

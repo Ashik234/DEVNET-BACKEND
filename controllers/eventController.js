@@ -45,7 +45,7 @@ const getAllEvents = async (req, res) => {
     if (eventData) {
       res.status(200).json({ data: true, message: "Events", eventData });
     } else {
-      res.status(200).json({ data: false, message: "No Active Events Found" });
+      res.status(400).json({ data: false, message: "No Active Events Found" });
     }
   } catch (error) {
     console.log(error);
@@ -60,7 +60,7 @@ const getEvents = async (req, res) => {
     if (eventData) {
       res.status(200).json({ data: true, message: "Events", eventData });
     } else {
-      res.status(200).json({ data: false, message: "No Data Found" });
+      res.status(400).json({ data: false, message: "No Data Found" });
     }
   } catch (error) {
     console.log(error);
@@ -82,7 +82,7 @@ const getSingleEvent = async (req, res) => {
         singleEvent,
       });
     } else {
-      res.status(200).json({ data: false, message: "No Data Found" });
+      res.status(400).json({ data: false, message: "No Data Found" });
     }
   } catch (error) {
     console.log(error);
@@ -93,10 +93,12 @@ const getSingleEvent = async (req, res) => {
 const searchEvents = async (req, res) => {
   try {
     const { query } = req.query;
-    console.log(query);
     const eventData = await eventModel.find({ $text: { $search: query } });
-    console.log(eventData);
-    return res.status(200).json({ eventData });
+    if(eventData){
+      return res.status(200).json({ eventData });
+    }else{
+      return res.status(400).json({ message:"No Search Results Found" });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });

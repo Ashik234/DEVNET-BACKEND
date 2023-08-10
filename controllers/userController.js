@@ -184,7 +184,8 @@ const UserGoogleLogin = async (req, res) => {
 
 const isUserAuth = async (req, res) => {
   try {
-    const userData = await userModel.findOne({ _id: req.userId });
+    const userData = await userModel.findOne({ _id: req.userId,status:true });
+    console.log(userData,"aaaa");
     if (!userData) {
       return res
         .status(404)
@@ -228,11 +229,9 @@ const editProfile = async (req, res) => {
       { username,image, github, linkedin, about },
       { new: true }
     );
-
     if (!updatedUser) {
       return res.status(404).json({ success: false, error: "User not found." });
     }
-
     return res.status(200).json({ success: true, user: updatedUser,message:"Profile Updated" });
   } catch (error) {
     return res.status(500).json({ success: false, error: "Server Error" });

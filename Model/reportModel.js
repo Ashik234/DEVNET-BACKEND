@@ -8,6 +8,10 @@ const reportSchema = new mongoose.Schema({
     questionId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "questions",
+    },
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"users"
     }
 })
 

@@ -11,6 +11,8 @@ const addMessage = async (req, res) => {
     const result = await message.save();
     if (result) {
       return res.status(200).json({ result });
+    }else{
+      return res.status(400).json({ message:"No Results Found" });
     }
   } catch (error) {
     console.log(error);
@@ -23,6 +25,8 @@ const getMessages = async (req, res) => {
     const result = await messageModel.find({ chatId });
     if (result) {
       return res.status(200).json({ result });
+    }else{
+      return res.status(400).json({ message:"No Results Found" });
     }
   } catch (error) {
     console.log(error);

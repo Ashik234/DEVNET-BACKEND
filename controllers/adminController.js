@@ -28,7 +28,7 @@ const adminLogin = async (req, res) => {
       .json({ login: true, message: "Login Successfull", token: token });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ error: erro.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -127,6 +127,10 @@ const addArticle = async (req, res) => {
       res
         .status(200)
         .json({ success: true, message: "Article Created Successfully" });
+    }else{
+      res
+        .status(400)
+        .json({ success: false, message: "Error Creating Article" });
     }
   } catch (error) {
     console.log(error.message);
@@ -150,6 +154,10 @@ const editArticle = async (req, res) => {
       res
         .status(200)
         .json({ success: true, message: "Article Updated Successfully" });
+    }else{
+      res
+      .status(400)
+      .json({ success: false, message: "Error Creating Article" });
     }
   } catch (error) {
     console.log(error.message);
@@ -173,8 +181,7 @@ const articleDetails = async (req, res) => {
 
 const reportDetails = async (req, res) => {
   try {
-    const reportData = await reportModel.find({}).populate("questionId");
-    console.log(reportData);
+    const reportData = await reportModel.find({}).populate("questionId").populate("userId")
     if (reportData) {
       res.status(200).json({ data: true, message: "Communities", reportData });
     } else {
@@ -232,7 +239,6 @@ const eventAction = async (req, res) => {
 const communityAction = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id);
     const community = await communityModel.findById(id);
 
     if (community) {
@@ -255,7 +261,6 @@ const communityAction = async (req, res) => {
 const articleAction = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id);
     const article = await articleModel.findById(id);
 
     if (article) {

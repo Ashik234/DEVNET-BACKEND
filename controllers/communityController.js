@@ -27,6 +27,10 @@ const createCommunity = async (req, res) => {
       res
         .status(200)
         .json({ success: true, message: "Community Created Successfully" });
+    }else{
+      res
+      .status(400)
+      .json({ success: false, message: "Error Creating Community" });
     }
   } catch (error) {
     console.log(error);
@@ -90,6 +94,11 @@ const joinCommunity = async (req, res) => {
         message: "Joined The Community Successfully",
         updatedCommunity,
       });
+    }else{
+      return res.status(400).json({
+        success: false,
+        message: "Error Joining The Community"
+      });
     }
   } catch (error) {
     console.log(error);
@@ -100,12 +109,14 @@ const joinCommunity = async (req, res) => {
 const searchCommunity = async (req, res) => {
   try {
     const { query } = req.query;
-    console.log(query);
     const communityData = await communityModel.find({
       $text: { $search: query },
     });
-    console.log(communityData);
-    return res.status(200).json({ communityData });
+    if(communityData){
+      return res.status(200).json({ communityData });
+    }else{
+      return res.status(400).json({ message:"No Search Results Found" });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });

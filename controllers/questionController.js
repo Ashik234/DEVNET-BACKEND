@@ -22,6 +22,10 @@ const askQuestion = async (req, res) => {
       res
         .status(200)
         .json({ success: true, message: "Question Created Successfully" });
+    }else{
+      res
+      .status(400)
+      .json({ success: false, message: "Error Creating Question" });
     }
   } catch (error) {
     console.log(error);
@@ -40,7 +44,7 @@ const getQuestions = async (req, res) => {
     }));
       res.status(200).json({ data: true, message: "Questions", questionData });
     } else {
-      res.status(200).json({ data: false, message: "No Data Found" });
+      res.status(400).json({ data: false, message: "No Data Found" });
     }
   } catch (error) {
     console.log(error);
@@ -71,16 +75,23 @@ const editQuestions = async (req, res) => {
 const questionReport = async(req,res)=>{
   try {
       const id = req.params.id
+      const userId = req.userId;
+      console.log(userId);
       const {reason}= req.body
       const report = new reportModel({
         reason ,
-        questionId :id
+        questionId :id,
+        userId
       })
       let newReport = report.save()
       if(newReport){
         res
         .status(200)
         .json({ success: true, message: "Question Reported Successfully" });
+      }else{
+        res
+        .status(400)
+        .json({ success: false, message: "Error Reporting Question" });
       }
   } catch (error) {
       console.log(error);
@@ -114,6 +125,12 @@ const saveQuestion = async (req, res) => {
         message: "Question Saved Successfully",
         updatedProfile,
       });
+    }else{
+      return res.status(400).json({
+        data: false,
+        success: false,
+        message: "Error Saving Question",
+      });
     }
   } catch (error) {
     console.log(error);
@@ -132,7 +149,7 @@ const getSavedQuestions = async (req, res) => {
         .status(200)
         .json({ data: true, message: "SavedQuestions ", savedQuestions });
     } else {
-      res.status(200).json({ data: false, message: "No Data Found" });
+      res.status(400).json({ data: false, message: "No Data Found" });
     }
   } catch (error) {
     console.log(error);
@@ -151,7 +168,7 @@ const getAskedQuestions = async (req, res) => {
         .status(200)
         .json({ data: true, message: "AskedQuestions ", askedQuestions });
     } else {
-      res.status(200).json({ data: false, message: "No Data Found" });
+      res.status(400).json({ data: false, message: "No Data Found" });
     }
   } catch (error) {
     console.log(error);
@@ -171,7 +188,7 @@ const getSingleQuestion = async (req, res) => {
         .status(200)
         .json({ data: true, message: "Single Question", singlequestion });
     } else {
-      res.status(200).json({ data: false, message: "No Data Found" });
+      res.status(400).json({ data: false, message: "No Data Found" });
     }
   } catch (error) {
     console.log(error);
@@ -205,6 +222,10 @@ const answerQuestion = async (req, res) => {
       return res
         .status(200)
         .json({ success: true, message: "Answer Submitted Successfully" });
+    }else{
+      return res
+        .status(400)
+        .json({ success: false, message: "Error Submiting Answer" });
     }
   } catch (error) {
     console.log(error);
@@ -256,7 +277,11 @@ const searchQuestions = async (req, res) => {
     const questionData = await questionModel
       .find({ $text: { $search: query } })
       .populate("userId");
-    return res.status(200).json({ questionData });
+      if(questionData){
+        return res.status(200).json({ questionData });
+      }else{
+        return res.status(400).json({ message:"No Search Results Found" });
+      }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -310,5 +335,4 @@ module.exports = {
   searchQuestions,
   getArticles,
   getSingleArticle
-
 };
