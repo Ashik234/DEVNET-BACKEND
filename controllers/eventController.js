@@ -39,7 +39,25 @@ const createEvent = async (req, res) => {
   }
 };
 
+const editEvent = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, description } = req.body;
 
+    const updatedEvent = await eventModel.findOneAndUpdate(
+      { _id: id }, 
+      { title, description}, 
+      { new: true }
+    );
+
+    if (!updatedEvent) {
+      return res.status(404).json({ error: true, message: "Event not found." });
+    }
+    return res.status(200).json({message:"Event updated successfully",updatedEvent});
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
 
 
 const getAllEvents = async (req, res) => {
