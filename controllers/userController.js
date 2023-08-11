@@ -185,7 +185,6 @@ const UserGoogleLogin = async (req, res) => {
 const isUserAuth = async (req, res) => {
   try {
     const userData = await userModel.findOne({ _id: req.userId,status:true });
-    console.log(userData,"aaaa");
     if (!userData) {
       return res
         .status(404)
@@ -202,7 +201,6 @@ const isUserAuth = async (req, res) => {
 const userGetDetails = async (req, res) => {
   try {
     let userId = req.params.userId;
-    console.log(userId);
     const userData = await userModel.findOne({ _id: userId });
     if (!userData)
       return res

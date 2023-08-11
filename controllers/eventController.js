@@ -39,6 +39,9 @@ const createEvent = async (req, res) => {
   }
 };
 
+
+
+
 const getAllEvents = async (req, res) => {
   try {
     let eventData = await eventModel.find();
@@ -56,7 +59,7 @@ const getAllEvents = async (req, res) => {
 const getEvents = async (req, res) => {
   try {
     const id = req.params.id;
-    let eventData = await eventModel.find({ communityId: id, status: true });
+    let eventData = await eventModel.find({ communityId: id, status: true })
     if (eventData) {
       res.status(200).json({ data: true, message: "Events", eventData });
     } else {
@@ -107,6 +110,7 @@ const searchEvents = async (req, res) => {
 
 module.exports = {
   createEvent,
+  editEvent,
   getAllEvents,
   getEvents,
   getSingleEvent,

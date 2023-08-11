@@ -38,6 +38,26 @@ const createCommunity = async (req, res) => {
   }
 };
 
+const editCommunity = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, description } = req.body;
+
+    const updatedCommunity = await communityModel.findOneAndUpdate(
+      { _id: id }, 
+      { title, description}, 
+      { new: true }
+    );
+
+    if (!updatedCommunity) {
+      return res.status(404).json({ error: true, message: "Community not found." });
+    }
+    return res.status(200).json({message:"Community updated successfully",updatedCommunity});
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
+
 const getCommunity = async (req, res) => {
   try {
     let communityData = await communityModel.find({ status: true });
@@ -125,6 +145,7 @@ const searchCommunity = async (req, res) => {
 
 module.exports = {
   createCommunity,
+  editCommunity,
   getCommunity,
   getSingleCommunity,
   joinCommunity,
