@@ -261,10 +261,9 @@ const verifiedAnswer = async (req, res) => {
       { new: true }
     );
     if (!updatedAnswer) {
-      return res.status(404).json({ error: true, message: "Answer not found." });
+      return res.status(404).json({data:false, error: true, message: "Answer not found." });
     }
-    return res.status(200).json({message:"Answer verified successfully",updatedAnswer});
-
+    return res.status(200).json({data:true,message:"Answer verified successfully",updatedAnswer});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -316,9 +315,36 @@ const getSingleArticle = async(req,res)=>{
     }
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });
-  
   }
 }
+
+const likeArticle = async (req, res) => {
+  try {
+      const userId = req.userId;
+      const articleId = req.params.id;
+      
+      const article = await articleModel.findById(articleId);
+
+      if (!article) {
+          return res.status(404).json({success:false, error: "Article not found" });
+      }
+
+      if (article.likes.users.includes(userId)) {
+          return res.status(400).json({success:false, error: "You have already liked this article" });
+      }
+
+      article.likes.count += 1;
+      article.likes.users.push(userId);
+
+      const updatedArticle = await article.save();
+
+      return res.status(200).json({success:true, message: "Article liked successfully", article: updatedArticle });
+  } catch (error) {
+      return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 
 module.exports = {
   askQuestion,
@@ -334,5 +360,6 @@ module.exports = {
   verifiedAnswer,
   searchQuestions,
   getArticles,
-  getSingleArticle
+  getSingleArticle,
+  likeArticle
 };

@@ -24,6 +24,7 @@ const {
   editAnswer,
   getArticles,
   getSingleArticle,
+  likeArticle,
 } = require("../controllers/questionController");
 const {
   createCommunity,
@@ -83,6 +84,7 @@ router.post("/verified/:id", userAuthentication, verifiedAnswer);
 router.get("/searchquestions", userAuthentication, searchQuestions);
 router.get("/articles", userAuthentication, getArticles);
 router.get("/viewarticle/:id", userAuthentication, getSingleArticle);
+router.post("/likearticle/:id",userAuthentication,likeArticle)
 
 router.post(
   "/createcommunity/:id",

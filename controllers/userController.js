@@ -188,13 +188,13 @@ const isUserAuth = async (req, res) => {
     if (!userData) {
       return res
         .status(404)
-        .json({ message: "user does not exists", success: false });
+        .json({ message: "user does not exists", data: false });
     } else {
-      return res.status(200).json({ success: true, userData: userData });
+      return res.status(200).json({ data: true, userData: userData });
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false });
+    return res.status(500).json({ data: false });
   }
 };
 

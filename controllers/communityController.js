@@ -27,10 +27,10 @@ const createCommunity = async (req, res) => {
       res
         .status(200)
         .json({ success: true, message: "Community Created Successfully" });
-    }else{
+    } else {
       res
-      .status(400)
-      .json({ success: false, message: "Error Creating Community" });
+        .status(400)
+        .json({ success: false, message: "Error Creating Community" });
     }
   } catch (error) {
     console.log(error);
@@ -44,15 +44,19 @@ const editCommunity = async (req, res) => {
     const { title, description } = req.body;
 
     const updatedCommunity = await communityModel.findOneAndUpdate(
-      { _id: id }, 
-      { title, description}, 
+      { _id: id },
+      { title, description },
       { new: true }
     );
 
     if (!updatedCommunity) {
-      return res.status(404).json({ error: true, message: "Community not found." });
+      return res
+        .status(404)
+        .json({ error: true, message: "Community not found." });
     }
-    return res.status(200).json({message:"Community updated successfully",updatedCommunity});
+    return res
+      .status(200)
+      .json({ message: "Community updated successfully", updatedCommunity });
   } catch (error) {
     return res.status(500).json({ error: true, message: error.message });
   }
@@ -114,10 +118,10 @@ const joinCommunity = async (req, res) => {
         message: "Joined The Community Successfully",
         updatedCommunity,
       });
-    }else{
+    } else {
       return res.status(400).json({
         success: false,
-        message: "Error Joining The Community"
+        message: "Error Joining The Community",
       });
     }
   } catch (error) {
@@ -132,10 +136,10 @@ const searchCommunity = async (req, res) => {
     const communityData = await communityModel.find({
       $text: { $search: query },
     });
-    if(communityData){
+    if (communityData) {
       return res.status(200).json({ communityData });
-    }else{
-      return res.status(400).json({ message:"No Search Results Found" });
+    } else {
+      return res.status(400).json({ message: "No Search Results Found" });
     }
   } catch (error) {
     console.log(error);
