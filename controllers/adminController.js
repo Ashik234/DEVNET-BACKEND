@@ -193,6 +193,29 @@ const reportDetails = async (req, res) => {
   }
 };
 
+const articleMetrics = async(req,res)=>{
+  try {
+    const articles = await articleModel.find();
+    
+    const totalArticles = articles.length;
+    
+    const sortedArticlesByLikes = articles.sort((a, b) => b.likes.count - a.likes.count);
+
+    const mostLikedArticle = sortedArticlesByLikes[0]; 
+    
+    res.json({
+      metrics: {
+        totalArticles,
+        mostPopularTitle: mostLikedArticle.title,
+        sortedArticles: sortedArticlesByLikes,
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: true, message: error.message });
+  }
+}
+
 const userAction = async (req, res) => {
   try {
     const id = req.params.id;
@@ -306,6 +329,7 @@ module.exports = {
   isAdminAuth,
   userCount,
   reportCount,
+  articleMetrics,
   userDetails,
   eventDetails,
   communityDetails,

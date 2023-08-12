@@ -330,7 +330,7 @@ const likeArticle = async (req, res) => {
       }
 
       if (article.likes.users.includes(userId)) {
-          return res.status(400).json({success:false, error: "You have already liked this article" });
+          return res.status(200).json({user:true, message: "You have already liked this article" });
       }
 
       article.likes.count += 1;
