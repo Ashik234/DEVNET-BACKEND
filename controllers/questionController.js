@@ -233,15 +233,36 @@ const answerQuestion = async (req, res) => {
   }
 };
 
+const getSingleAnswer = async(req,res)=>{
+  try {
+    const id = req.params.id
+    const singleAnswer = await questionModel.findOne({"answers._id": id})
+    if(singleAnswer){
+      res
+        .status(200)
+        .json({ data: true, message: "Single Answer", singleAnswer });
+    } else {
+      res.status(400).json({ data: false, message: "No Data Found" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 const editAnswer = async(req,res)=>{
   try {
     const id = req.params.id;
+    console.log(id);
+    console.log("ddd");
     const {answer} = req.body
+    console.log(answer);
     const updatedAnswer = await questionModel.findOneAndUpdate(
       { "answers._id": id },
       { "$set": { "answers.$.answer": answer } },
       { new: true }
     );
+    console.log(updatedAnswer);
     if (!updatedAnswer) {
       return res.status(404).json({ error: true, message: "Answer not found." });
     }
@@ -344,8 +365,6 @@ const likeArticle = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   askQuestion,
   saveQuestion,
@@ -356,6 +375,7 @@ module.exports = {
   getAskedQuestions,
   getSingleQuestion,
   answerQuestion,
+  getSingleAnswer,
   editAnswer,
   verifiedAnswer,
   searchQuestions,

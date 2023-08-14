@@ -13,7 +13,7 @@ app.use(express.json());
 configureSocket(server);
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173","https://devnetapp.netlify.app","https://devnetapp.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   })
