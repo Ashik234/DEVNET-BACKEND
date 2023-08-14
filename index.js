@@ -5,8 +5,8 @@ const cors = require("cors");
 require("dotenv").config();
 const server = require("http").createServer(app);
 const { configureSocket } = require("./Config/Socket");
-const UserRoutes = require("../Server/Routes/userRoutes");
-const AdminRoutes = require("../Server/Routes/adminRoutes");
+const UserRoutes = require("./Routes/userRoutes");
+const AdminRoutes = require("./Routes/adminRoutes");
 app.use(express.json());
 
 // socket setup
