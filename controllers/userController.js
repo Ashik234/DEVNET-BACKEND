@@ -185,7 +185,6 @@ const UserGoogleLogin = async (req, res) => {
 const isUserAuth = async (req, res) => {
   try {
     const userData = await userModel.findOne({ _id: req.userId,status:true });
-    console.log(userData,888,req.userId);
     if (!userData) {
       return res
         .status(404)

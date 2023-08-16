@@ -6,7 +6,7 @@ let activeUsers = [];
 const configureSocket = (server) => {
   io = socket(server, {
     cors: {
-      origin: [process.env.BASE_URL],
+      origin: [process.env.BASE_URL,"https://devnetapp.netlify.app","https://devnetapp.vercel.app"],
       methods: ["GET", "POST", "PATCH"],
       credentials: true,
     },
